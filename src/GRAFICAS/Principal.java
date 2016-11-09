@@ -1061,17 +1061,20 @@ public class Principal extends javax.swing.JFrame {
                 
                 //DISTINGUIMOS SI LA BBDD ES DB4O
                 if (!this.tipoBBDD.equals("db4o")) {
-                    if (gestor1.insertarClienteBBDD(cliente, tipoBBDD) > 0) {
-                        actualizarListaClientes();
-                        radioClientes.setSelected(true);
+                    if (gestor1.insertarClienteBBDD(cliente, tipoBBDD) > 0) {                
                         mostrarPanelInfo("Insertado o modificado el cliente: " + cliente.getNombre());
                     } else 
                         mostrarPanelError("No se pudo actualizar/insertar el cliente");                    
                 }
                 else{
                     //INSERCIÓN INDIVIDUAL PARA DB4O
-                    ////SEGUIR AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+                    if(gestor1.insertarClienteDB4O(cliente))
+                        mostrarPanelInfo("NUEVO CLIENTE INSERTADO EN LA BBDD DB4O");
+                    else
+                        mostrarPanelInfo("CLIENTE MODIFICADO EN LA BBDD DB4O");
                 }
+                actualizarListaClientes();
+                radioClientes.setSelected(true);
             }
             else
             {
@@ -1118,18 +1121,22 @@ public class Principal extends javax.swing.JFrame {
                 //SI ESTÁ SELECCINADO EL RADIO BBDD INSERTAMOS O ACTUALIZAMOS EN LA BBDD
                 if(radiobbdd.isSelected()){
                     if (!this.tipoBBDD.equals("db4o")) {
-                        if (gestor1.insertarProductoBBDD(producto, tipoBBDD) > 0) {
-                            //ACTUALIZAMOS LISTA DE PRODUCTOS
-                            actualizarListaProductos();
-                            radioProductos.setSelected(true);
+                        if (gestor1.insertarProductoBBDD(producto, tipoBBDD) > 0) {                          
                             mostrarPanelInfo("Insertado o modificado el cliente: " + producto.getDescripcion());
                         } 
                         else 
-                            mostrarPanelError("No se pudo actualizar/insertar el producto");                       
+                            mostrarPanelError("No se pudo actualizar/insertar el producto");            
+                        
+                        //ACTUALIZAMOS LISTA DE PRODUCTOS
+                        actualizarListaProductos();
+                        radioProductos.setSelected(true);
                     }
                     else{
                         //PARA LA INSERCIÓN INDIVIDUAL DE PRODUCTOS EN DB4O
-                        //SEGUIR AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+                        if(gestor1.insertarProductoDB4O(producto))
+                            mostrarPanelInfo("NUEVO PRODUCTO INSERTADO EN LA BBDD DB4O");
+                        else
+                            mostrarPanelInfo("PRODUCTO MODIFICADO EN LA BBDD DB4O");
                     }
                 }
                 else{               

@@ -377,7 +377,8 @@ public class GestorBBDD {
                 porcentajeProgreso = porcentajeProgreso + incremento;
                 h1.setEstado(Math.round(porcentajeProgreso));
             }
-            //CERRAMOS FICHERO
+            //CONFIRMAMOS Y CERRAMOS FICHERO
+            this.db4oC.commit();
             this.db4oC.close();
         }
         //CONFIGURAMOS MAPA Y LO DEVOLVEMOS
@@ -878,6 +879,60 @@ public class GestorBBDD {
         return false;
     }
         
+    
+    //MÉTODO QUE INSERTA O ACTUALIZA UN CLIENTE SI ESTE ESTÁ O NO EN LA BBDD DB4O
+    public boolean insertarClienteDB4O(Cliente cliente){
+        
+        boolean existeCLiente = pedirListaClientesDB4O().contains(cliente);
+        //ABRIMOS LA BBDD DB4O,COMPROBAMOS QUE NO ESTÉ EL CLIENTE Y LO INSERTAMOS
+        this.db4oC = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "efecto2000.yap");
+            
+        //COMPROBAMOS SI EL CLIENTE ESTÁ EN LA BBDD
+        if(existeCLiente){
+            
+            //BORRAMOS CLIENTE E INSERTAMOS EL MODIFICADO
+            this.db4oC.delete(cliente);
+            this.db4oC.store(cliente);
+            
+            //CONFIRMAMOS CAMBIOS Y CERRAMOS BBDD
+            this.db4oC.commit();
+            this.db4oC.close();
+            return false;
+        }
+        else
+            this.db4oC.store(cliente);
+        
+        this.db4oC.commit();    
+        this.db4oC.close();
+        return true;
+    }
+    
+    //MÉTODO QUE INSERTA O ACTUALIZA UN CLIENTE SI ESTE ESTÁ O NO EN LA BBDD DB4O
+    public boolean insertarProductoDB4O(Producto producto){
+        
+        boolean existeProducto = pedirListaClientesDB4O().contains(producto);
+        //ABRIMOS LA BBDD DB4O,COMPROBAMOS QUE NO ESTÉ EL CLIENTE Y LO INSERTAMOS
+        this.db4oC = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "efecto2000.yap");
+            
+        //COMPROBAMOS SI EL CLIENTE ESTÁ EN LA BBDD
+        if(existeProducto){
+            
+            //BORRAMOS PRODUCTO E INSERTAMOS EL MODIFICADO
+            this.db4oC.delete(producto);
+            this.db4oC.store(producto);
+            
+            //CONFIRMAMOS CAMBIOS Y CERRAMOS BBDD
+            this.db4oC.commit();
+            this.db4oC.close();
+            return false;
+        }
+        else
+            this.db4oC.store(producto);
+        
+        this.db4oC.commit();    
+        this.db4oC.close();
+        return true;
+    }
     
     public void setFicheroXML(File ficheroXML) {
         this.ficheroXML = ficheroXML;
