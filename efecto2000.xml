@@ -98,6 +98,20 @@
       <TELEFONO>917325566</TELEFONO>
       <NIF>47210124-C</NIF>
     </CLIENTE>
+    <CLIENTE>
+      <NOMBRE>Beatriz Barragán Sultán</NOMBRE>
+      <DIRECCION>Cl Zuazo 23</DIRECCION>
+      <POBLACION>Vitoria</POBLACION>
+      <TELEFONO>945222356</TELEFONO>
+      <NIF>47285559-B</NIF>
+    </CLIENTE>
+    <CLIENTE>
+      <NOMBRE>Marta Rojas Fernandez</NOMBRE>
+      <DIRECCION>Cl Madeo Lopez</DIRECCION>
+      <POBLACION>Madrid</POBLACION>
+      <TELEFONO>913652250</TELEFONO>
+      <NIF>44458997-M</NIF>
+    </CLIENTE>
   </CLIENTES>
   <PRODUCTOS>
     <PRODUCTO>

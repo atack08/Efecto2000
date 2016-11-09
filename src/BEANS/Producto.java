@@ -71,17 +71,13 @@ public class Producto {
     @Override
     public boolean equals(Object obj) {
         
-        if (obj == null) {
+        Producto prodObjetivo = (Producto)obj;
+        
+        if(this.getId() == prodObjetivo.getId())
+            return true;
+        else
             return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Producto other = (Producto) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        return true;
+        
     }
     
     

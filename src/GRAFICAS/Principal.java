@@ -847,6 +847,16 @@ public class Principal extends javax.swing.JFrame {
         actualizarComboClientes();
         actualizarComboProductos();
         
+        //ACTUALIZAMOS LAS LISTAS DE OBJETOS A MOSTRAR
+        if(radioClientes.isSelected())
+            actualizarListaClientes();
+        else{
+            if(radioProductos.isSelected())
+                actualizarListaProductos();
+        }
+            
+                
+        
         //ACTUALIZAMOS EL CAMPO DE TEXTO QUE MUESTRA EL SIGUIENTE ID DISPONIBLE
         actualizarIdVenta();
         
@@ -1063,6 +1073,8 @@ public class Principal extends javax.swing.JFrame {
                 if (!this.tipoBBDD.equals("db4o")) {
                     if (gestor1.insertarClienteBBDD(cliente, tipoBBDD) > 0) {                
                         mostrarPanelInfo("Insertado o modificado el cliente: " + cliente.getNombre());
+                        //MOSTRAMOS EN EL PANEL DE INSERCIONES
+                        mostrarInsercionClientePanel(cliente);
                     } else 
                         mostrarPanelError("No se pudo actualizar/insertar el cliente");                    
                 }
@@ -1072,6 +1084,8 @@ public class Principal extends javax.swing.JFrame {
                         mostrarPanelInfo("NUEVO CLIENTE INSERTADO EN LA BBDD DB4O");
                     else
                         mostrarPanelInfo("CLIENTE MODIFICADO EN LA BBDD DB4O");
+                    
+                    mostrarInsercionClientePanel(cliente);
                 }
                 actualizarListaClientes();
                 radioClientes.setSelected(true);
@@ -1080,8 +1094,10 @@ public class Principal extends javax.swing.JFrame {
             {
                 if(radioXML.isSelected()){                  
                        //INSERTAMOS EN EL XML
-                    if (gestor1.insertarClienteEnXML(cliente)) 
+                    if (gestor1.insertarClienteEnXML(cliente)){
                        mostrarPanelInfo("CLIENTE INSERTADO EN FICHERO XML");
+                       mostrarInsercionClientePanel(cliente);
+                    }
                     else 
                        mostrarPanelError("EL CLIENTE YA ESTÁ EN EL FICHERO XML");
                     
@@ -1122,14 +1138,13 @@ public class Principal extends javax.swing.JFrame {
                 if(radiobbdd.isSelected()){
                     if (!this.tipoBBDD.equals("db4o")) {
                         if (gestor1.insertarProductoBBDD(producto, tipoBBDD) > 0) {                          
-                            mostrarPanelInfo("Insertado o modificado el cliente: " + producto.getDescripcion());
+                            mostrarPanelInfo("Insertado o modificado el producto: " + producto.getDescripcion());
+                            
+                            //MOSTRAMOS EN EL PLANE DE LA INTERFACE GRAFICA LA INSERCIÓN
+                            mostrarInsercionProductoPanel(producto);
                         } 
                         else 
-                            mostrarPanelError("No se pudo actualizar/insertar el producto");            
-                        
-                        //ACTUALIZAMOS LISTA DE PRODUCTOS
-                        actualizarListaProductos();
-                        radioProductos.setSelected(true);
+                            mostrarPanelError("No se pudo actualizar/insertar el producto");                                                     
                     }
                     else{
                         //PARA LA INSERCIÓN INDIVIDUAL DE PRODUCTOS EN DB4O
@@ -1137,13 +1152,21 @@ public class Principal extends javax.swing.JFrame {
                             mostrarPanelInfo("NUEVO PRODUCTO INSERTADO EN LA BBDD DB4O");
                         else
                             mostrarPanelInfo("PRODUCTO MODIFICADO EN LA BBDD DB4O");
+
+                            mostrarInsercionProductoPanel(producto);
                     }
+                    
+                    //ACTUALIZAMOS LISTA DE PRODUCTOS
+                     actualizarListaProductos();
+                     radioProductos.setSelected(true);
                 }
                 else{               
                     if(radioXML.isSelected()){
                         //INSERTAMOS EN EL XML
-                        if(gestor1.insertarProductoEnXML(producto))
+                        if(gestor1.insertarProductoEnXML(producto)){
                             mostrarPanelInfo("PRODUCTO INSERTADO EN FICHERO XML");
+                            mostrarInsercionProductoPanel(producto);
+                        }
                         else
                             mostrarPanelError("EL PRODUCTO YA ESTÁ EN EL FICHERO XML");
                     }
@@ -1232,6 +1255,36 @@ public class Principal extends javax.swing.JFrame {
         textStockMProducto.setText(String.valueOf(producto.getStockMinimo()));
         textPvpProducto.setText(String.valueOf(producto.getPvp())+ "€");
     }
+    
+    //MÉTODO QUE ACTUALIZA EL MODELO DE LAS INSERCIONES INDIVIDUALES PARA
+    //MOSTRARLO EN LA INTERFACE GRAFICA
+    public void mostrarInsercionClientePanel(Cliente cliente){
+        
+        //RESETEAMOS  MODELO
+        this.modeloListaInsercionCliente = new DefaultListModel<>();
+        //AÑADIMOS INSERCIÓN A MODELO
+        this.modeloListaInsercionCliente.addElement(cliente.toString());  
+        
+        this.listaClientesInsertados.setModel(modeloListaInsercionCliente);
+    }
+    
+    public void mostrarInsercionProductoPanel(Producto producto){
+        
+        //RESETEAMOS  MODELO
+        this.modeloListaInsercionProducto = new DefaultListModel<>();
+        //AÑADIMOS INSERCIÓN A MODELO
+        this.modeloListaInsercionProducto.addElement(producto.toString()); 
+        
+        this.listaProductosInsertados.setModel(modeloListaInsercionProducto);
+    }
+    
+    public void mostrarInsercionVentaPanel(){
+        
+        
+        
+    }
+    
+    
     
     /**
      * @param args the command line arguments

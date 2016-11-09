@@ -910,28 +910,30 @@ public class GestorBBDD {
     //MÉTODO QUE INSERTA O ACTUALIZA UN CLIENTE SI ESTE ESTÁ O NO EN LA BBDD DB4O
     public boolean insertarProductoDB4O(Producto producto){
         
-        boolean existeProducto = pedirListaClientesDB4O().contains(producto);
+       
         //ABRIMOS LA BBDD DB4O,COMPROBAMOS QUE NO ESTÉ EL CLIENTE Y LO INSERTAMOS
         this.db4oC = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "efecto2000.yap");
             
-        //COMPROBAMOS SI EL CLIENTE ESTÁ EN LA BBDD
-        if(existeProducto){
-            
-            //BORRAMOS PRODUCTO E INSERTAMOS EL MODIFICADO
-            this.db4oC.delete(producto);
-            this.db4oC.store(producto);
-            
-            //CONFIRMAMOS CAMBIOS Y CERRAMOS BBDD
-            this.db4oC.commit();
-            this.db4oC.close();
-            return false;
-        }
-        else
-            this.db4oC.store(producto);
+        ObjectSet<Cliente> result = this.db4oC.queryByExample(new Producto(producto.getId()));
         
+        //COMPROBAMOS SI EL CLIENTE ESTÁ EN LA BBDD
+        if(result.isEmpty()){
+            //SI NO EXISTE LO INSERTAMOS
+           this.db4oC.store(producto); 
+           
+           this.db4oC.commit();    
+           this.db4oC.close();
+           return true;
+        }
+        else{
+            //SI EXISTE BORRAMOS E INSERTAMOS
+            this.db4oC.delete(result.next());
+            this.db4oC.store(producto);
+        }
+         
         this.db4oC.commit();    
         this.db4oC.close();
-        return true;
+        return false;
     }
     
     public void setFicheroXML(File ficheroXML) {
