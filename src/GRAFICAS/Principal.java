@@ -40,7 +40,7 @@ public class Principal extends javax.swing.JFrame {
     private DefaultComboBoxModel<Producto> modeloComboProductos;
     private DefaultComboBoxModel<Producto> modeloComboProdElegidos;
     //MAPA PARA LA VENTA
-    HashMap<Producto, Integer> mapaVenta;
+    private HashMap<Producto, Integer> mapaVenta;
   
     public Principal() {
         initComponents();
