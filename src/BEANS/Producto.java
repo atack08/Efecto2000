@@ -68,17 +68,26 @@ public class Producto {
         return this.id + " - " + this.descripcion;
     }
 
+   
     @Override
     public boolean equals(Object obj) {
-        
-        Producto prodObjetivo = (Producto)obj;
-        
-        if(this.getId() == prodObjetivo.getId())
+        if (this == obj) {
             return true;
-        else
+        }
+        if (obj == null) {
             return false;
-        
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Producto other = (Producto) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return true;
     }
+
+    
     
     
 }

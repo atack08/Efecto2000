@@ -10,10 +10,15 @@ public class Pruebas
 {
   public static void main(String[] args){
  
-    GestorBBDD dao = new GestorBBDD("efecto2000", "localhost:8889", "root", "root", null);
-   
-    Cliente c =  new Cliente("Marcial sdfsdfdsfdsfres", "Cl dsfsdfdsf 193", "dsfsdf", "945098sdfds258", "51689544-K");
-    Producto p = new Producto(222145, 10, 2, "Nvidia GTX 980 4GB", 340.20f);
+    String cadena1 = "JAVIER SERRANO GRAZAITI";
+    String cadena2 = "MARAI MARCOS GRAZIATI";
+        
+    StringBuffer buffer = new StringBuffer(60);
+    buffer.insert(0,cadena1);
+    System.out.println(cadena1);
+    System.out.println(cadena1.length());
+    System.out.println(buffer);
+    System.out.println(buffer.length());
     
     
     

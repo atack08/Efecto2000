@@ -7,6 +7,7 @@ import DAOS.GestorBBDD;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -116,12 +117,13 @@ public class Principal extends javax.swing.JFrame {
     //MÉTODO QUE ELIMINA DEL MODELO DE PRODUCTOS SELECCIONADOS UN PRODUCTO EN CUESTIÓN
     public void eliminarProductoSeleccionado(){
         
-        Producto producto = (Producto) modeloComboProdElegidos.getSelectedItem();
-        //LO BORRAMOS DEL MODELO
-        modeloComboProdElegidos.removeElement(producto);
-        //LOBORRAMOS DEL MAPA DE LA VENTA
-        mapaVenta.remove(producto);
-               
+        if(modeloComboProdElegidos.getSize()>0){
+            Producto producto = (Producto) modeloComboProdElegidos.getSelectedItem();
+            //LO BORRAMOS DEL MODELO
+             modeloComboProdElegidos.removeElement(producto);
+            //LO BORRAMOS DEL MAPA DE LA VENTA
+            mapaVenta.remove(producto);
+        }
     }
     
     
@@ -150,6 +152,10 @@ public class Principal extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
+        jDialog1 = new javax.swing.JDialog();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        textConfVenta = new javax.swing.JTextArea();
+        jButton2 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -215,6 +221,43 @@ public class Principal extends javax.swing.JFrame {
         barraProgreso1 = new javax.swing.JProgressBar();
         botonCargarXML = new javax.swing.JButton();
         labelFichero = new javax.swing.JLabel();
+
+        jDialog1.setTitle("Confirmación de venta");
+        jDialog1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jDialog1.setIconImage(null);
+        jDialog1.setLocation(new java.awt.Point(433, 184));
+        jDialog1.setMinimumSize(new java.awt.Dimension(500, 400));
+        jDialog1.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        jDialog1.setResizable(false);
+
+        textConfVenta.setColumns(20);
+        textConfVenta.setRows(5);
+        jScrollPane5.setViewportView(textConfVenta);
+
+        jButton2.setText("Confirmar venta");
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5)
+                .addContainerGap())
+            .addGroup(jDialog1Layout.createSequentialGroup()
+                .addGap(141, 141, 141)
+                .addComponent(jButton2)
+                .addContainerGap(148, Short.MAX_VALUE))
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -457,6 +500,11 @@ public class Principal extends javax.swing.JFrame {
         textIdVenta.setToolTipText("Se cargará con el siguiente ID libre en la BBDD");
 
         jButton5.setText("INSERTAR");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         botonProducto.setText("Añadir");
         botonProducto.addActionListener(new java.awt.event.ActionListener() {
@@ -1030,6 +1078,9 @@ public class Principal extends javax.swing.JFrame {
                     cliente =  this.gestor1.pedirClienteBBDD(nifCliente, this.tipoBBDD);
                 
                 cargarClienteEnFormulario(cliente);
+                
+                //SELECCIONAMOS LA PESTAÑA CLIENTE
+                jTabbedPane2.setSelectedIndex(0);
             }
             else{
                 if(radioProductos.isSelected() && !this.modelolistaObjetos.isEmpty()){
@@ -1043,7 +1094,8 @@ public class Principal extends javax.swing.JFrame {
                         producto =  this.gestor1.pedirProductoBBDD(idProducto, this.tipoBBDD);
                 
                     cargarProductoEnFormulario(producto);
-                    
+                    //SELECCIONAMOS LA PESTAÑA PRODUCTO
+                    jTabbedPane2.setSelectedIndex(1);
                 }
             }
             
@@ -1206,6 +1258,24 @@ public class Principal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        //AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        configurarTextAreaVenta();
+        jDialog1.setVisible(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    public void configurarTextAreaVenta(){
+        
+        String cadena1 = "JAVIER SERRANO GRAZAITI";
+        String cadena2 = "MARAI MARCOS GRAZIATI";
+        
+        StringBuffer buffer = new StringBuffer(60);
+        buffer.append(cadena1);
+        
+        
+        
+    }
     
     //MÉTODO QUE CARGA LAS INSERCIONES EN LAS DIFERENTES LISTAS DE LA INTERFACE(SI NO ESTÁN VACIAS)
     public void cargarListaInserciones(ArrayList<Cliente> listaCI , ArrayList<Producto> listaPI){
@@ -1335,7 +1405,9 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JComboBox<Producto> comboProductosSeleccionados;
     private javax.swing.JComboBox<String> comboTipoBBDD;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton5;
+    private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1364,6 +1436,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel labelFichero;
@@ -1377,6 +1450,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JRadioButton radiobbdd;
     private javax.swing.JSlider sliderVentas;
     private javax.swing.JTextField textCantidadVenta;
+    private javax.swing.JTextArea textConfVenta;
     private javax.swing.JTextField textDesProducto;
     private javax.swing.JTextField textDirCliente;
     private javax.swing.JTextField textIdProducto;
