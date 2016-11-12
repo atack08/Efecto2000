@@ -79,8 +79,10 @@ public class Principal extends javax.swing.JFrame {
        this.sliderVentas.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                //CADA VEZ QUE CAMBIA EL VALOR DEL SLIDER LO REFLEJAMOS EN EL CAMPO DE TEXTO
-               textCantidadVenta.setText(String.valueOf(sliderVentas.getValue()));
+         
+                //CADA VEZ QUE CAMBIA EL VALOR DEL SLIDER LO REFLEJAMOS EN EL CAMPO DE TEXTO   
+                textCantidadVenta.setText(String.valueOf(sliderVentas.getValue()));
+            
             }
         });
     }
@@ -479,6 +481,7 @@ public class Principal extends javax.swing.JFrame {
         sliderVentas.setMaximum(20);
         sliderVentas.setValue(0);
 
+        textCantidadVenta.setEditable(false);
         textCantidadVenta.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         textCantidadVenta.setForeground(new java.awt.Color(51, 153, 255));
         textCantidadVenta.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -488,6 +491,17 @@ public class Principal extends javax.swing.JFrame {
         comboBoxClientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxClientesActionPerformed(evt);
+            }
+        });
+
+        comboBoxProductos.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboBoxProductosItemStateChanged(evt);
+            }
+        });
+        comboBoxProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxProductosActionPerformed(evt);
             }
         });
 
@@ -527,8 +541,8 @@ public class Principal extends javax.swing.JFrame {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
@@ -539,9 +553,9 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(comboBoxClientes, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                            .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addGap(30, 30, 30)
@@ -561,12 +575,12 @@ public class Principal extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(8, 8, 8)))))
-                .addGap(16, 16, 16))
+                .addGap(18, 18, 18))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap(28, Short.MAX_VALUE)
+                .addGap(16, 16, 16)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textVentaCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -596,7 +610,7 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Venta", jPanel6);
@@ -974,6 +988,9 @@ public class Principal extends javax.swing.JFrame {
         
         comboBoxProductos.setModel(this.modeloComboProductos);
         
+        //FIJAMOS LA CANTIDAD MAXIMA DEL SLIDER CON EL PRIMER PRODUCTO
+        sliderVentas.setMaximum(((Producto)comboBoxProductos.getSelectedItem()).getStockActual());
+        
     }
     
     //MÉTODO QUE INICIA EL VOLCADO DEL FICHERO XML EN LA BBDD SELECCIONADA
@@ -1264,6 +1281,19 @@ public class Principal extends javax.swing.JFrame {
         configurarTextAreaVenta();
         jDialog1.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void comboBoxProductosItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxProductosItemStateChanged
+        //RESETEAMOS LA CANTIDAD ELEGIDA CADA VEZ QUE CAMBIAMOS DE PRODUCTO
+        //CAMBIAMOS VALORES MAXIMOS DEL SLIDER SEGÚN EL STOCK
+        int maxStock =  ((Producto)comboBoxProductos.getSelectedItem()).getStockActual();
+        sliderVentas.setMaximum(maxStock);
+        sliderVentas.setValue(0);
+        
+    }//GEN-LAST:event_comboBoxProductosItemStateChanged
+
+    private void comboBoxProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxProductosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxProductosActionPerformed
 
     public void configurarTextAreaVenta(){
         

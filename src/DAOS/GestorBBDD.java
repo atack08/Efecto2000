@@ -65,7 +65,7 @@ public class GestorBBDD {
     private final String updateTablaProducto = "update productos set id=?, descripcion=?, stockactual=?, stockminimo=?, pvp=? where id=?";
     private final String consultaVentasVacia = "select count(idventa) from ventas";
     private final String consultaSiguienteIdVentas = "select max(idventa) from ventas";
-  
+    private final String consultaStockActualProducto = "select stockactual from productos where id=?";
     
     //BARRA DE PROGRESO REFERENCIADA DE LA INTERFACE
     private JProgressBar barraProgreso1;
@@ -935,6 +935,45 @@ public class GestorBBDD {
         this.db4oC.close();
         return false;
     }
+    
+    //MÉTODO QUE DEVUELVE UN ENTERO CON EL STOCK ACTUAL DEL PRODUCTO
+    public int pedirStockActualProducto(String tipoBBDD, int idProducto){
+        
+        Connection cn = null;
+        int stockProducto = 0;
+        
+        //CREAMOS CONEXIÓN DEPENDIENDO DEL TIPO SELECCIONADO
+        switch (tipoBBDD) {
+            case "mysql":
+                cn = conexionMysql();
+                break;
+            case "sqlite":
+                cn = conexionSQLITE();
+                break;      
+        } 
+        
+        try {        
+            preparedBusquedaObjeto = cn.prepareStatement(consultaStockActualProducto);
+            preparedBusquedaObjeto.setInt(1, idProducto);
+            ResultSet rs = preparedBusquedaObjeto.executeQuery();
+            
+            if(rs.next())
+                stockProducto = rs.getInt(1);
+            
+            rs.close();
+            preparedBusquedaObjeto.close();
+            cn.close();
+                  
+        } 
+        catch (SQLException ex) {
+                Logger.getLogger(GestorBBDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return stockProducto;
+    }
+    
+    
+    
     
     public void setFicheroXML(File ficheroXML) {
         this.ficheroXML = ficheroXML;
