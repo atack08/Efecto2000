@@ -4,8 +4,12 @@ package GRAFICAS;
 import BEANS.Cliente;
 import BEANS.Producto;
 import DAOS.GestorBBDD;
+import java.awt.Color;
 import java.io.File;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.DefaultComboBoxModel;
@@ -158,6 +162,7 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         textConfVenta = new javax.swing.JTextArea();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -233,10 +238,13 @@ public class Principal extends javax.swing.JFrame {
         jDialog1.setResizable(false);
 
         textConfVenta.setColumns(20);
-        textConfVenta.setRows(5);
+        textConfVenta.setRows(7);
+        textConfVenta.setTabSize(12);
         jScrollPane5.setViewportView(textConfVenta);
 
-        jButton2.setText("Confirmar venta");
+        jButton2.setText("Confirmar ");
+
+        jButton3.setText("Cancelar");
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -244,21 +252,25 @@ public class Principal extends javax.swing.JFrame {
             jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDialog1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jDialog1Layout.createSequentialGroup()
-                .addGap(141, 141, 141)
+                .addGap(137, 137, 137)
                 .addComponent(jButton2)
-                .addContainerGap(148, Short.MAX_VALUE))
+                .addGap(45, 45, 45)
+                .addComponent(jButton3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jDialog1Layout.setVerticalGroup(
             jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDialog1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
+                .addGap(25, 25, 25))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -287,6 +299,12 @@ public class Principal extends javax.swing.JFrame {
         });
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Inserción individual"));
+
+        jTabbedPane2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane2MouseClicked(evt);
+            }
+        });
 
         jLabel4.setText("Nombre: ");
 
@@ -497,11 +515,6 @@ public class Principal extends javax.swing.JFrame {
         comboBoxProductos.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 comboBoxProductosItemStateChanged(evt);
-            }
-        });
-        comboBoxProductos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxProductosActionPerformed(evt);
             }
         });
 
@@ -1175,8 +1188,6 @@ public class Principal extends javax.swing.JFrame {
                     mostrarPanelError("Ningúna opción de inserción seleccionada.");
             }
         }
-        
-        //FALTA PONERLE LA ACTUALIZACIÓN INSERCIÓN EN LA BBDD DB4O
     }//GEN-LAST:event_botonInClienteActionPerformed
 
     private void botonInProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonInProductoActionPerformed
@@ -1249,7 +1260,6 @@ public class Principal extends javax.swing.JFrame {
             mostrarPanelError("Formáto numérico erroneo en los campos de texto.");
         }
         
-        //FALTA PONERLE LA ACTUALIZACIÓN INSERCIÓN EN LA BBDD DB4O
     }//GEN-LAST:event_botonInProductoActionPerformed
 
     //EVENTO PARA EL CAMBIO DE CLIENTE EN EL COMBO DE LA PESTAÑA VENTAS
@@ -1275,14 +1285,91 @@ public class Principal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    //EVENTO QUE DESPLIEGA LA VENTANA DE CONFIRMACIÓN DE VENTA
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        //AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-        configurarTextAreaVenta();
+
+        //COMPROBAMOS QUE EL STOCK NO HAYA CAMBIADO
+        if(comprobarTiempoRealStockVenta())
+            mostrarPanelInfo("STOCK CORRECTO");
+        else
+            mostrarPanelError("STOCK INSUFICIENTE");
+        
+        
+        formatearConfirmacionDeVenta();
         jDialog1.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    //MÉTODO QUE ACTUALIZA EL SOTOCK DE UN PRODUCTO EN TIEMPO REAL DESDE LA BBDD
+    public void actualizarStockProductos(int idProducto){
+        
+        int stockActual;
+
+        for (int i = 0; i < modeloComboProductos.getSize(); i++) {
+
+            Producto p = modeloComboProductos.getElementAt(i);
+
+            if (idProducto == p.getId()) {
+
+                //DISTINGO SI ES DB4O
+                if (!tipoBBDD.equalsIgnoreCase("db4o")) 
+                    stockActual = gestor1.pedirStockActualProducto(tipoBBDD, p.getId());                
+                else 
+                    stockActual = gestor1.pedirStockActualProductoDB4O(p.getId());
+                
+                //SI EL STOCK EN LA BBDD ES DIFERENTE LO ACTUALIZAMOS EN LA INTERFACE
+                if (p.getStockActual() != stockActual) {
+                    comboBoxProductos.getItemAt(i).setStockActual(stockActual);
+                }
+
+                break;
+            }
+        }
+    }
+    
+    
+    //MÉTODO QUE COMPRUEBA Y CORRIGE EL STOCK CON LA BBDD EN TIEMPO REAL
+    public boolean comprobarTiempoRealStockVenta(){
+        
+        int stockActual;
+        int cantidad;
+        
+        if (!mapaVenta.isEmpty()) {
+            
+            Iterator<Producto> it = mapaVenta.keySet().iterator();
+            
+            if(!tipoBBDD.equalsIgnoreCase("db4o")){
+                 
+                while (it.hasNext()) {
+                    Producto producto = (Producto) it.next();
+                    stockActual = gestor1.pedirStockActualProducto(tipoBBDD, producto.getId());
+                    cantidad = (Integer)mapaVenta.get(producto).intValue();
+                    
+                    if(stockActual < cantidad)
+                        return false;
+                }
+            }
+            else{
+                
+                while (it.hasNext()) {
+                    Producto producto = (Producto) it.next();
+                    stockActual = gestor1.pedirStockActualProductoDB4O(producto.getId());
+                    cantidad = (Integer)mapaVenta.get(producto).intValue();
+                    
+                    if(stockActual < cantidad)
+                        return false;
+                }
+                
+            }
+        }
+             
+        return true;
+    }
+    
     private void comboBoxProductosItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxProductosItemStateChanged
+            
+        //ACTUALIZAMOS EL STOCK DE LOS PRODUCTO CADA VEZ QUE CAMBIAMOS DE PRODUCTO  
+        actualizarStockProductos(((Producto)comboBoxProductos.getSelectedItem()).getId());
+
         //RESETEAMOS LA CANTIDAD ELEGIDA CADA VEZ QUE CAMBIAMOS DE PRODUCTO
         //CAMBIAMOS VALORES MAXIMOS DEL SLIDER SEGÚN EL STOCK
         int maxStock =  ((Producto)comboBoxProductos.getSelectedItem()).getStockActual();
@@ -1291,9 +1378,26 @@ public class Principal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_comboBoxProductosItemStateChanged
 
-    private void comboBoxProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxProductosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_comboBoxProductosActionPerformed
+    //METODO PARA QUE AL CAMBIAR A LA PESTAÑA VENTA SE DESACTIVE EL RADIO XML
+    //Y SE ACTUALIZE EL STOCK DE LOS PRODUCTOS CON LA BBDD
+    private void jTabbedPane2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane2MouseClicked
+        
+        if(jTabbedPane2.getSelectedIndex() == 2){
+           radiobbdd.setSelected(true);
+           radioXML.setEnabled(false);
+           //ACTUALIZAMOS STOCK DEL PRODUCTO SELECCIONADO
+           actualizarStockProductos(((Producto)comboBoxProductos.getSelectedItem()).getId());
+           //POSICIONAMOS EL SLIDER EN 0
+           sliderVentas.setValue(0);
+           //FIJAMOS LA CANTIDAD MAXIMA DEL SLIDER CON EL PRODUCTO SELECCIONADO 
+           sliderVentas.setMaximum(((Producto)comboBoxProductos.getSelectedItem()).getStockActual());
+       }
+        else{         
+            if(!radioXML.isEnabled())
+                radioXML.setEnabled(true);               
+        }
+        
+    }//GEN-LAST:event_jTabbedPane2MouseClicked
 
     public void configurarTextAreaVenta(){
         
@@ -1384,11 +1488,52 @@ public class Principal extends javax.swing.JFrame {
         
     }
     
+    ///FIN METODOS PARA VISUALIZAR EN LOS PANELES DE INSERCIÓN
+    
+    //MÉTODO PARA FORMATEAR EL AREA DE TEXTO DEL DIALOGO DE CONFIRMACIÓN DE VENTA
+    public void formatearConfirmacionDeVenta(){
+        
+        //FORMATEAMOS LA FECHA PARA MOSTRARLA POPR PANTALLA
+        //Y SALVAMOS LA MARCA DE TIEMPO PARA LA BBDD
+        Date fechaVenta = new Date();
+        long timestamp = fechaVenta.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy -- HH:mm:ss");
+        String fechaFormateada = sdf.format(fechaVenta);
+        DecimalFormat df = new DecimalFormat("###.##");
+        
+        //IMPRIMIMOS CABECERA CON EL ID DE LA VENTA Y LA FECHA
+        textConfVenta.append("EFECTO 2000 SA.\tID VENTA: " + textIdVenta.getText() + "\t" +  fechaFormateada + "\n\n");
+        textConfVenta.setForeground(Color.BLACK);
+        
+        //IMPRIMIMOS EL RESTO DE LOS PRODUCTOS DE LA VENTA
+        Iterator<Producto> it = mapaVenta.keySet().iterator();
+        float totalVenta = 0;
+
+        while (it.hasNext()) {
+            Producto producto = (Producto) it.next();
+            int cantidad = (Integer) mapaVenta.get(producto).intValue();
+            
+            //VAMOS SUMANDO CANTIDADES
+            totalVenta = totalVenta + (cantidad * producto.getPvp());
+            
+            //PUNTOS SUSPENSIVOS - DECORACION DE TEXTO
+            int blancos = 50 - producto.getDescripcion().length();
+            
+            //IMPRIMIMOS DESCRIPCIÓN
+            String desc = producto.getDescripcion();
+            for(int i = 0 ; i < blancos; i++){
+                desc += (" ");
+            }
+           
+            //FORMATEAMOS EL PRECIO          
+            textConfVenta.append(desc + "\tX" + cantidad + "   " + (df.format(cantidad*producto.getPvp())) + "€\n");                
+        }
+        
+        //IMPRIMIMOS EL TOTAL
+        textConfVenta.append("\nTOTAL FACTURA\t\t" + df.format(totalVenta) + "€");
+    }
     
     
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1436,6 +1581,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> comboTipoBBDD;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;

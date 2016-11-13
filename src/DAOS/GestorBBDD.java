@@ -973,6 +973,25 @@ public class GestorBBDD {
     }
     
     
+    //MÉTODO QUE DEVUELVE EL STOCK ACTUAL DE UN PRODUCTO EN LA BBDD DB40
+    public int pedirStockActualProductoDB4O(int idProducto){
+        
+        int stock = 0;
+        //ABRIMOS LA BBDD DB4O
+        this.db4oC = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "efecto2000.yap");
+        
+        //COMPROBAMOS QU EL OBJETO ESTÉ EN LA BBDD
+        ObjectSet<Producto> result = this.db4oC.queryByExample(new Producto(idProducto));
+        
+        //DEVOLVEMOS EL STOCK ACTUAL DEL PRODUCTO
+        if(!result.isEmpty()){
+            stock = result.next().getStockActual();
+        }
+            
+        this.db4oC.close();
+        return stock;
+    }
+    
     
     
     public void setFicheroXML(File ficheroXML) {
