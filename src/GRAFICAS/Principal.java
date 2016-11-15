@@ -245,6 +245,11 @@ public class Principal extends javax.swing.JFrame {
         jButton2.setText("Confirmar ");
 
         jButton3.setText("Cancelar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -1287,16 +1292,25 @@ public class Principal extends javax.swing.JFrame {
 
     //EVENTO QUE DESPLIEGA LA VENTANA DE CONFIRMACIÓN DE VENTA
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        //COMPROBAMOS QUE EL MAPA DE PRODUCTOS SELECCIONADOS NO ESTÉ VACÍO
+        
+        if (!mapaVenta.isEmpty()) {
+            //COMPROBAMOS QUE EL STOCK NO HAYA CAMBIADO
+            if (comprobarTiempoRealStockVenta()) {
+                //FROMATEAMOS CONFIRMACIÓN Y ABRIMOS EL DIALOGO
+                formatearConfirmacionDeVenta();
+                jDialog1.setVisible(true);
+            } else {
+                mostrarPanelError("STOCK INSUFICIENTE, EL STOCK HA CAMBIADO");
 
-        //COMPROBAMOS QUE EL STOCK NO HAYA CAMBIADO
-        if(comprobarTiempoRealStockVenta())
-            mostrarPanelInfo("STOCK CORRECTO");
-        else
-            mostrarPanelError("STOCK INSUFICIENTE");
+            }
+
+        }
+        else{
+            mostrarPanelError("No se seleccionó ningún producto");
+        }
         
         
-        formatearConfirmacionDeVenta();
-        jDialog1.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     //MÉTODO QUE ACTUALIZA EL SOTOCK DE UN PRODUCTO EN TIEMPO REAL DESDE LA BBDD
@@ -1399,6 +1413,12 @@ public class Principal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jTabbedPane2MouseClicked
 
+    //EVENTO QUE CONTROLA EL BOTOÓN CANCELAR DEL DIALOGO DE CONFIRMACIÓN DE VENTA
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        //CERRAMOS EL DIALOGO
+        jDialog1.dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     public void configurarTextAreaVenta(){
         
         String cadena1 = "JAVIER SERRANO GRAZAITI";
@@ -1493,6 +1513,10 @@ public class Principal extends javax.swing.JFrame {
     //MÉTODO PARA FORMATEAR EL AREA DE TEXTO DEL DIALOGO DE CONFIRMACIÓN DE VENTA
     public void formatearConfirmacionDeVenta(){
         
+        
+        //RESETEAMOS EL AREA DE TEXTO
+        textConfVenta.setText("");
+        
         //FORMATEAMOS LA FECHA PARA MOSTRARLA POPR PANTALLA
         //Y SALVAMOS LA MARCA DE TIEMPO PARA LA BBDD
         Date fechaVenta = new Date();
@@ -1501,8 +1525,13 @@ public class Principal extends javax.swing.JFrame {
         String fechaFormateada = sdf.format(fechaVenta);
         DecimalFormat df = new DecimalFormat("###.##");
         
+        //OBTENEMOS EL CLIENTE QUE REALIZA LA COMPRA
+        Cliente comprador = (Cliente)comboBoxClientes.getSelectedItem();
+        
         //IMPRIMIMOS CABECERA CON EL ID DE LA VENTA Y LA FECHA
-        textConfVenta.append("EFECTO 2000 SA.\tID VENTA: " + textIdVenta.getText() + "\t" +  fechaFormateada + "\n\n");
+        textConfVenta.append("EFECTO 2000 SA.\tID VENTA: " + textIdVenta.getText() + "\t" +  
+                fechaFormateada + "\n" + comprador.getNombre().toUpperCase() + "\t" 
+                + comprador.getNif() + "  " + comprador.getTelefono() + "\n\n");
         textConfVenta.setForeground(Color.BLACK);
         
         //IMPRIMIMOS EL RESTO DE LOS PRODUCTOS DE LA VENTA
