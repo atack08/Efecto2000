@@ -45,6 +45,8 @@ public class Principal extends javax.swing.JFrame {
     private DefaultComboBoxModel<Producto> modeloComboProdElegidos;
     //MAPA PARA LA VENTA
     private HashMap<Producto, Integer> mapaVenta;
+    //VARIABLE QUE DEFINE LA SUMA TOTAL DE LA VENTA EN CURSO
+    private float totalVenta;
   
     public Principal() {
         initComponents();
@@ -243,6 +245,11 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane5.setViewportView(textConfVenta);
 
         jButton2.setText("Confirmar ");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Cancelar");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -1007,7 +1014,8 @@ public class Principal extends javax.swing.JFrame {
         comboBoxProductos.setModel(this.modeloComboProductos);
         
         //FIJAMOS LA CANTIDAD MAXIMA DEL SLIDER CON EL PRIMER PRODUCTO
-        sliderVentas.setMaximum(((Producto)comboBoxProductos.getSelectedItem()).getStockActual());
+        if(comboBoxProductos.getItemCount() > 0)
+            sliderVentas.setMaximum(((Producto)comboBoxProductos.getSelectedItem()).getStockActual());
         
     }
     
@@ -1399,12 +1407,14 @@ public class Principal extends javax.swing.JFrame {
         if(jTabbedPane2.getSelectedIndex() == 2){
            radiobbdd.setSelected(true);
            radioXML.setEnabled(false);
-           //ACTUALIZAMOS STOCK DEL PRODUCTO SELECCIONADO
-           actualizarStockProductos(((Producto)comboBoxProductos.getSelectedItem()).getId());
-           //POSICIONAMOS EL SLIDER EN 0
-           sliderVentas.setValue(0);
-           //FIJAMOS LA CANTIDAD MAXIMA DEL SLIDER CON EL PRODUCTO SELECCIONADO 
-           sliderVentas.setMaximum(((Producto)comboBoxProductos.getSelectedItem()).getStockActual());
+            //ACTUALIZAMOS STOCK DEL PRODUCTO SELECCIONADO
+            if (comboBoxProductos.getItemCount() > 0) {
+                actualizarStockProductos(((Producto) comboBoxProductos.getSelectedItem()).getId());
+                //POSICIONAMOS EL SLIDER EN 0
+                sliderVentas.setValue(0);
+                //FIJAMOS LA CANTIDAD MAXIMA DEL SLIDER CON EL PRODUCTO SELECCIONADO 
+                sliderVentas.setMaximum(((Producto) comboBoxProductos.getSelectedItem()).getStockActual());
+            }
        }
         else{         
             if(!radioXML.isEnabled())
@@ -1418,6 +1428,25 @@ public class Principal extends javax.swing.JFrame {
         //CERRAMOS EL DIALOGO
         jDialog1.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    //EVENTO QUE CONFIRMA Y REALIZA INSERCIÓN DE LA VENTA DEFINITIVAMENTE
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
+        //RESCATAMOS EL CLIENTE SELECCIONADO QUE REALIZA COMPRA
+        Cliente cliente = (Cliente)modeloComboClientes.getSelectedItem();
+        
+        //DISTINGUIMOS ENTRE BBDD
+        switch (tipoBBDD) {
+            case "mysql":
+                //LE PASAMOS EL MAPA DE LA VENTA Y EL CLIENTE
+                gestor1.insertarVentaMysql(cliente, mapaVenta, totalVenta);
+                break;
+            case "sqlite":
+               // cn = conexionSQLITE();
+                break;
+        }
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     public void configurarTextAreaVenta(){
         
@@ -1513,6 +1542,8 @@ public class Principal extends javax.swing.JFrame {
     //MÉTODO PARA FORMATEAR EL AREA DE TEXTO DEL DIALOGO DE CONFIRMACIÓN DE VENTA
     public void formatearConfirmacionDeVenta(){
         
+        //RESETEAMOS LA VARIABLE DE CLASE TOTAL VENTA
+        totalVenta = 0;
         
         //RESETEAMOS EL AREA DE TEXTO
         textConfVenta.setText("");
@@ -1536,8 +1567,7 @@ public class Principal extends javax.swing.JFrame {
         
         //IMPRIMIMOS EL RESTO DE LOS PRODUCTOS DE LA VENTA
         Iterator<Producto> it = mapaVenta.keySet().iterator();
-        float totalVenta = 0;
-
+        
         while (it.hasNext()) {
             Producto producto = (Producto) it.next();
             int cantidad = (Integer) mapaVenta.get(producto).intValue();

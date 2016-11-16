@@ -18,6 +18,7 @@ CREATE TABLE ventas (
  idventa		INTEGER	PRIMARY KEY AUTOINCREMENT,
  fechaventa 	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, 
  cliente  		VARCHAR(10) NOT NULL,
+ total          FLOAT NOT NULL,
  FOREIGN KEY(cliente) REFERENCES clientes(nif)
 );
 

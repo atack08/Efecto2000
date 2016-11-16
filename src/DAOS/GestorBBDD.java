@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
 //IMPORTACIONES NECESARIASPARA TRABAJAR CON MYSQL Y SQLITE
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,6 +23,7 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,6 +68,16 @@ public class GestorBBDD {
     private final String consultaVentasVacia = "select count(idventa) from ventas";
     private final String consultaSiguienteIdVentas = "select max(idventa) from ventas";
     private final String consultaStockActualProducto = "select stockactual from productos where id=?";
+    private final String insercionVenta = "insert into ventas (cliente, total) values (?,?)";
+    private final String insercionLinea = "insert into lineas (idventa,idproducto,cantidad) values (?,?,?)";
+    private final String cambioStockProducto = "update productos set stockactual = ? where id = ?";
+    private final String comprobarStockMinimo = "select (stockactual - stockminimo)from productos where id = ?";
+    
+    //LLAMADAS A PROCEDIMIENTOS  Y FUNCIONES ALMACENADOS
+    private final String llamadaProcedimientoInsertarVenta = "{call insertarVenta (?,?)}";
+    private final String llamadaProcedimientoInsertarLinea = "{call insertarLinea (?,?,?)}";
+    private final String funcionCambioStock = "select cambioStock(?,?)";
+    
     
     //BARRA DE PROGRESO REFERENCIADA DE LA INTERFACE
     private JProgressBar barraProgreso1;
@@ -991,6 +1003,169 @@ public class GestorBBDD {
         this.db4oC.close();
         return stock;
     }
+    
+    //MÉTODO QUE INSERTA UNA VENTA CON SUS CORRESPONDIENTES LINEAS EN LA BBDD MYSQL
+    //PARA ELLO UTILIZARÁ 2 FUNCIONES ALMACENADAS EN MYSQL Y 1 FUNCIÓN QUE ACTUALIZARÁ EL STOCK
+    //DEVOLVIENDO 0 - 1 DEPENDIENDO SI SE HA ALCANZADO EL STOCK MINIMO
+    public ArrayList<Producto> insertarVentaMysql (Cliente cliente, HashMap<Producto, Integer> mapaVenta, float totalVenta){
+        
+        //CREAMOS ARRAYLIST PARA IR GUARDANDO LOS PRODUCTOS QUE HAN REBAJADO EL STOCKMINIMO
+        //PARA MOSTRARLOS AL TERMINAR EL MÉTODO
+        ArrayList<Producto> listaAlertaStock = new ArrayList<>();
+        
+        try {
+            //EL PRIMER PASO ES CREAR LA CONEXIÓN Y REGISTRAR LA VENTA EN LA BBDD
+            Connection cn = conexionMysql();
+       
+            //PARA INSERTAR LA VENTA UTILIZAMOS EL PROCEDIMIENTO ALMACENADO 'procedimientoInsertarVenta'
+            //UTILIZAMOS LA CLASE CALLABLE STATEMENT, INSTANCIAMOS TAMBIÉN EL PREPARED STATEMENT PARA LA FUNCIÓN
+            //CAMBIO STOCK
+            CallableStatement callP = cn.prepareCall(this.llamadaProcedimientoInsertarVenta);
+            preparedInsercion = cn.prepareStatement(this.funcionCambioStock);
+            
+            //CONFIGURAMOS LOS PARÁMETROS
+            callP.setString(1, cliente.getNif());
+            callP.setFloat(2, totalVenta);
+            
+            //EJECUTAMOS EL PROCEDIMIENTO, NO DEVUELVE RESULTADO
+            callP.execute();
+                    
+            //UNA VEZ INSERTADA LA VENTA PROCEDEMOS CON LAS LINEAS
+            //INSTANCIAMOS EL CALLABLE STATEMENT
+            callP = cn.prepareCall(this.llamadaProcedimientoInsertarLinea);
+            
+            //PEDIMOS EL ID DE LA VENTA QUE ACABAMOS DE INSERTAR
+            //RESTAMOS 1 PORQUE EL METODO NOS DEVUELVE EL SIGUIENTE DISPONIBLE,
+            //NO EL ÚLTIMO INSERTADO
+            int idV = pedirSiguienteIdVentas("mysql") - 1;
+            
+            //RECORREMOS EL MAPA VENTA
+            Iterator<Producto> it = mapaVenta.keySet().iterator();
+            int idP;
+            int cantidad;
+            
+            while (it.hasNext()) {
+                Producto producto = it.next();
+                idP = producto.getId();
+                cantidad = mapaVenta.get(producto);
+                
+                //CONFIGURAMOS PARÁMETROS DEL STATEMENT
+                callP.setInt(1, idV);
+                callP.setInt(2, idP);
+                callP.setInt(3, cantidad);
+                
+                //INSERTAMOS LA LINEA
+                callP.execute();
+                
+                //UNA VEZ INSERTADA LA LINEA ACTUALIZAMOS EL STOCK DEL PRODUCTO
+                //CON LA FUNCIÓN ALMACENADA 'cambioStock(idProducto in, unidadesVendidas int)'
+                preparedInsercion.setInt(1, idP);
+                preparedInsercion.setInt(2, cantidad);
+                
+                //EJECUTAMOS EL PREPARED STATEMENT Y ACTUALIZAMOS EL STOCK
+                //SI DEVUELVE 0 NO SE HA REBAJADO EL STOCKMINIMO, SI DEVUELVE 1 SI Y
+                //METEMOS ESE OBJETO EN EL MAPA PARA MOSTRAR MÁS ADELANTE LA ALERTA
+                ResultSet rs = preparedInsercion.executeQuery();
+                rs.next();
+                
+                if(rs.getInt(1) == 1)
+                    listaAlertaStock.add(producto);
+                
+                //CERRAMOS RESULTSET 
+                rs.close();    
+            }
+        
+            //CERRAMOS STATEMENTS Y CONEXIÓN
+            preparedInsercion.close();
+            callP.close();
+            cn.close();    
+            
+        } catch (SQLException ex) {
+            mostrarPanelError(ex.getLocalizedMessage());
+        }
+        
+        return listaAlertaStock;
+    }
+    
+    //MÉTODO QUE INSERTA UNA VENTA Y SUS RESPECTIVAS LINEAS EN LA BBDD SQLITE
+    //DEVUELVE UNA LISTA CON LOS PRODUCTOS QUE HAN REBAJADO EL STOCK MINIMO
+    
+    public ArrayList<Producto> insertarVentaSQLite(Cliente cliente, HashMap<Producto, Integer> mapaVenta, float totalVenta){
+        
+        ArrayList<Producto> listaP =  new ArrayList<>();
+        
+        try {
+                       
+            //INSTANCIAMOS PREPARED STATEMENT
+            Connection cn = conexionSQLITE();
+            preparedInsercion =  cn.prepareStatement(this.insercionVenta);
+            
+            //CONFIGURAMOS PARÁMETROS E INSERTAMOS
+            preparedInsercion.setString(1, cliente.getNif());
+            preparedInsercion.setFloat(2, totalVenta);
+            
+            //INSERTAMOS LA VENTA
+            preparedInsercion.executeUpdate();
+            
+            //RECORREMOS EL MAPA VENTA
+            Iterator<Producto> it = mapaVenta.keySet().iterator();
+            int idP;
+            int cantidad;
+            
+            //PEDIMOS EL ID DE LA VENTA QUE ACABAMOS DE INSERTAR
+            //RESTAMOS 1 PORQUE EL METODO NOS DEVUELVE EL SIGUIENTE DISPONIBLE,
+            //NO EL ÚLTIMO INSERTADO
+            int idV = pedirSiguienteIdVentas("sqlite") - 1;
+            
+            while (it.hasNext()) {
+                Producto producto = it.next();
+                idP = producto.getId();
+                cantidad = mapaVenta.get(producto);
+                
+                //INSTANCIAMOS PREPARED STATEMENT
+                preparedInsercion = cn.prepareStatement(this.insercionLinea);
+                
+                //CONFIGURAMOS PRÁMETROS
+                preparedInsercion.setInt(1, idV);
+                preparedInsercion.setInt(2, idP);
+                preparedInsercion.setInt(3, cantidad);
+                
+                preparedInsercion.executeUpdate();
+                
+                //INSTANCIAMOS PREPARED STATEMENT PARA ACTUALIZAR EL STOCK
+                preparedInsercion = cn.prepareStatement(this.cambioStockProducto);
+                
+                //CONFIGURAMOS PARÁMETROS
+                //NUEVO STOCK
+                int nuevoStock = producto.getStockActual() - cantidad;         
+                preparedInsercion.setInt(1, nuevoStock);
+                preparedInsercion.setInt(2, idP);
+             
+                preparedInsercion.executeUpdate();
+                
+                //COMPROBAMOS EL STOCK MINIMO
+                preparedInsercion = cn.prepareStatement(this.comprobarStockMinimo);
+                preparedInsercion.setInt(1, idP);
+                
+                //SI EL RESULTADO DE LA CONSULTA ES MENOR QUE 0 AÑADIMOS EL OBJETO A LA LISTA
+                ResultSet rs = preparedInsercion.executeQuery();
+                rs.next();
+                if(rs.getInt(1) < 0)
+                    listaP.add(producto);                 
+            }
+            
+            //CERRAMOS STATEMENT Y CONEXION
+            preparedInsercion.close();
+            cn.close();
+            
+                 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorBBDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listaP;
+    }
+    
     
     
     
