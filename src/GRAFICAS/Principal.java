@@ -5,7 +5,12 @@ import BEANS.Cliente;
 import BEANS.Producto;
 import DAOS.GestorBBDD;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,9 +52,24 @@ public class Principal extends javax.swing.JFrame {
     private HashMap<Producto, Integer> mapaVenta;
     //VARIABLE QUE DEFINE LA SUMA TOTAL DE LA VENTA EN CURSO
     private float totalVenta;
+    
+    //USUARIO Y CONTRASEÑA CON PERMISO PARA ACCEDER
+    private String usuarioEncriptado = "21232f297a57a5a743894a0e4a801fc3";
+    private String passEncriptada = "81dc9bdb52d04dc20036dbd8313ed055";
   
     public Principal() {
         initComponents();
+           
+        //CENTRAMOS EN PANTALLA
+        this.setLocationRelativeTo(null);
+        
+        //CENTRAMOS EL DIALOGO CONFIRMACIÓN DE VENTA
+        jDialog1.setLocationRelativeTo(this);
+        
+        //CENTRAMOS  Y ABRIMOS EL LOGIN
+        login.setLocationRelativeTo(null);
+        login.setVisible(true);
+        
         //LLAMAMOS AL MÉTODO QUE  CAMBIA EL PUERTO SEGÚN EL SO
         configurarPuertoSO();
         
@@ -90,8 +110,35 @@ public class Principal extends javax.swing.JFrame {
                 textCantidadVenta.setText(String.valueOf(sliderVentas.getValue()));
             
             }
-        });
+        }); 
     }
+    
+    //MÉTODO QUE SE ENCARGA DE COMPROBAR EL LOGUEO
+    //MÉTODO QUE ENCRIPTA LOS DATOS INTRODUCIDOS POR EL USUARIO
+    //Y LOS COMPARA CON LOS NECESARIOS PARA ACCEDER
+    public boolean coincideEncriptacion(String cadenaE, String cadena){
+        try{
+          MessageDigest m = MessageDigest.getInstance("MD5");
+          m.reset();
+          m.update(cadena.getBytes());
+          byte[] digest = m.digest();
+          BigInteger bigInt = new BigInteger(1, digest);
+          String hashtext = bigInt.toString(16);
+          
+          while (hashtext.length() < 32) {
+            hashtext = "0" + hashtext;
+          }
+          if (hashtext.equals(cadenaE)) {
+            return true;
+        }
+    }
+    catch (NoSuchAlgorithmException ex)
+    {
+      mostrarPanelError(ex.getLocalizedMessage());
+    }
+    return false;
+  }
+    
     
     //MÉTOD QUE ASIGNA UN VALOR AL PUERTO SEGÚN EL SISTEMA OPERATIVO
     public void configurarPuertoSO(){
@@ -161,10 +208,17 @@ public class Principal extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         jDialog1 = new javax.swing.JDialog();
+        jDialog1.setLocationRelativeTo(null);
         jScrollPane5 = new javax.swing.JScrollPane();
         textConfVenta = new javax.swing.JTextArea();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        login = new javax.swing.JDialog();
+        botonLogin = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        textoUsuario = new javax.swing.JTextField();
+        textoPassword = new javax.swing.JPasswordField();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -234,14 +288,14 @@ public class Principal extends javax.swing.JFrame {
         jDialog1.setTitle("Confirmación de venta");
         jDialog1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jDialog1.setIconImage(null);
-        jDialog1.setLocation(new java.awt.Point(433, 184));
+        jDialog1.setLocation(new java.awt.Point(0, 0));
         jDialog1.setMinimumSize(new java.awt.Dimension(500, 400));
         jDialog1.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         jDialog1.setResizable(false);
 
         textConfVenta.setColumns(20);
         textConfVenta.setRows(7);
-        textConfVenta.setTabSize(12);
+        textConfVenta.setTabSize(5);
         jScrollPane5.setViewportView(textConfVenta);
 
         jButton2.setText("Confirmar ");
@@ -263,26 +317,78 @@ public class Principal extends javax.swing.JFrame {
         jDialog1Layout.setHorizontalGroup(
             jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDialog1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(jDialog1Layout.createSequentialGroup()
-                .addGap(137, 137, 137)
-                .addComponent(jButton2)
-                .addGap(45, 45, 45)
-                .addComponent(jButton3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDialog1Layout.createSequentialGroup()
+                        .addGap(137, 137, 137)
+                        .addComponent(jButton2)
+                        .addGap(45, 45, 45)
+                        .addComponent(jButton3))
+                    .addGroup(jDialog1Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jDialog1Layout.setVerticalGroup(
             jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDialog1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
                 .addGap(25, 25, 25))
+        );
+
+        login.setTitle("LOGIN");
+        login.setModal(true);
+        login.setSize(new java.awt.Dimension(488, 178));
+
+        botonLogin.setText("ENTRAR");
+        botonLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonLoginActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Usuario");
+
+        jLabel18.setText("Contraseña");
+
+        javax.swing.GroupLayout loginLayout = new javax.swing.GroupLayout(login.getContentPane());
+        login.getContentPane().setLayout(loginLayout);
+        loginLayout.setHorizontalGroup(
+            loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(loginLayout.createSequentialGroup()
+                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(loginLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(botonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, loginLayout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(textoUsuario)
+                            .addComponent(textoPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE))))
+                .addContainerGap(80, Short.MAX_VALUE))
+        );
+        loginLayout.setVerticalGroup(
+            loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textoPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(botonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -714,7 +820,7 @@ public class Principal extends javax.swing.JFrame {
 
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        listaObjetosBBDD.setToolTipText("Volver a pulsar el boton deseado al cambiar de BBDD");
+        listaObjetosBBDD.setToolTipText("Hacer doble click para ver detalles del objeto");
         listaObjetosBBDD.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listaObjetosBBDDMouseClicked(evt);
@@ -774,12 +880,12 @@ public class Principal extends javax.swing.JFrame {
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -816,7 +922,7 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
@@ -942,7 +1048,10 @@ public class Principal extends javax.swing.JFrame {
                 actualizarListaProductos();
         }
             
-                
+        //RESETEAMOS EL MAPA DE VENTAS Y EL MODELO PRODUCTOS ELEGIDOS
+        this.mapaVenta = new HashMap<>();
+        this.modeloComboProdElegidos.removeAllElements();
+        
         
         //ACTUALIZAMOS EL CAMPO DE TEXTO QUE MUESTRA EL SIGUIENTE ID DISPONIBLE
         actualizarIdVenta();
@@ -1442,11 +1551,31 @@ public class Principal extends javax.swing.JFrame {
                 gestor1.insertarVentaMysql(cliente, mapaVenta, totalVenta);
                 break;
             case "sqlite":
-               // cn = conexionSQLITE();
+                gestor1.insertarVentaSQLite(cliente, mapaVenta, totalVenta);
                 break;
         }
         
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    ///ESCUCHADOR DE EVENTOS PARA EL BOTÓN DE LOGIN
+    private void botonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLoginActionPerformed
+    
+        //USER = admin
+        //PASWORD = 1234
+        
+        String user = textoUsuario.getText();
+        char[] passC = textoPassword.getPassword();
+        String pass = String.valueOf(passC);
+        
+        if ((coincideEncriptacion(usuarioEncriptado, user)) && (coincideEncriptacion(passEncriptada, pass))) {
+
+            login.dispose();
+        } else {
+            mostrarPanelError("LOGIN INCORRECTO");
+            textoUsuario.setText("");
+            textoPassword.setText("");
+        }
+    }//GEN-LAST:event_botonLoginActionPerformed
 
     public void configurarTextAreaVenta(){
         
@@ -1456,8 +1585,7 @@ public class Principal extends javax.swing.JFrame {
         StringBuffer buffer = new StringBuffer(60);
         buffer.append(cadena1);
         
-        
-        
+      
     }
     
     //MÉTODO QUE CARGA LAS INSERCIONES EN LAS DIFERENTES LISTAS DE LA INTERFACE(SI NO ESTÁN VACIAS)
@@ -1630,6 +1758,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton botonCargarXML;
     private javax.swing.JButton botonInCliente;
     private javax.swing.JButton botonInProducto;
+    private javax.swing.JButton botonLogin;
     private javax.swing.JButton botonProducto;
     private javax.swing.JButton botonSeleccionFile;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -1652,7 +1781,9 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1679,6 +1810,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JList<String> listaObjetosBBDD;
     private javax.swing.JList<String> listaProductosInsertados;
     private javax.swing.JList<String> listaVentasInsertadas;
+    private javax.swing.JDialog login;
     private javax.swing.JRadioButton radioClientes;
     private javax.swing.JRadioButton radioProductos;
     private javax.swing.JRadioButton radioXML;
@@ -1698,5 +1830,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField textStockMProducto;
     private javax.swing.JTextField textTelCliente;
     private javax.swing.JTextField textVentaCliente;
+    private javax.swing.JPasswordField textoPassword;
+    private javax.swing.JTextField textoUsuario;
     // End of variables declaration//GEN-END:variables
 }

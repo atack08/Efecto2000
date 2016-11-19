@@ -20,8 +20,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -68,7 +71,7 @@ public class GestorBBDD {
     private final String consultaVentasVacia = "select count(idventa) from ventas";
     private final String consultaSiguienteIdVentas = "select max(idventa) from ventas";
     private final String consultaStockActualProducto = "select stockactual from productos where id=?";
-    private final String insercionVenta = "insert into ventas (cliente, total) values (?,?)";
+    private final String insercionVenta = "insert into ventas (fechaventa,cliente, total) values (?,?,?)";
     private final String insercionLinea = "insert into lineas (idventa,idproducto,cantidad) values (?,?,?)";
     private final String cambioStockProducto = "update productos set stockactual = ? where id = ?";
     private final String comprobarStockMinimo = "select (stockactual - stockminimo)from productos where id = ?";
@@ -1100,9 +1103,13 @@ public class GestorBBDD {
             Connection cn = conexionSQLITE();
             preparedInsercion =  cn.prepareStatement(this.insercionVenta);
             
+            //RESCATAMOS TIMESTAMP
+            Timestamp timeS = new Timestamp( System.currentTimeMillis());
+                        
             //CONFIGURAMOS PARÁMETROS E INSERTAMOS
-            preparedInsercion.setString(1, cliente.getNif());
-            preparedInsercion.setFloat(2, totalVenta);
+            preparedInsercion.setTimestamp(1, timeS);
+            preparedInsercion.setString(2, cliente.getNif());
+            preparedInsercion.setFloat(3, totalVenta);
             
             //INSERTAMOS LA VENTA
             preparedInsercion.executeUpdate();
