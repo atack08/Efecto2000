@@ -2,23 +2,32 @@
 package GRAFICAS;
 
 import BEANS.Cliente;
+import BEANS.Linea;
 import BEANS.Producto;
+import BEANS.Venta;
 import DAOS.GestorBBDD;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
@@ -42,8 +51,9 @@ public class Principal extends javax.swing.JFrame {
     //MAPA QUE CONTIENE LAS INSERCIONES REALIZADAS EN CADA OPERACIÓN
     private HashMap <String,ArrayList> mapaInserciones;
     //MODELOS PARA LAS LISTAS DE INSERCIONES
-    private DefaultListModel<String> modeloListaInsercionCliente, modeloListaInsercionProducto, modeloListaInsercionVenta,
-            modelolistaObjetos;
+    private DefaultListModel<String> modeloListaInsercionCliente, modeloListaInsercionProducto, modeloListaInsercionVenta;
+    //MODELO PARA LALISTA DE OBJETOS
+    private DefaultListModel modelolistaObjetos;
     //MODELOS PARA LOS COMBOBOX
     private DefaultComboBoxModel<Cliente> modeloComboClientes;
     private DefaultComboBoxModel<Producto> modeloComboProductos;
@@ -56,6 +66,10 @@ public class Principal extends javax.swing.JFrame {
     //USUARIO Y CONTRASEÑA CON PERMISO PARA ACCEDER
     private String usuarioEncriptado = "21232f297a57a5a743894a0e4a801fc3";
     private String passEncriptada = "81dc9bdb52d04dc20036dbd8313ed055";
+    
+    //VARIABLES PARA EL CLIENTE SELECCIONADO y PRODUCTO SELECCIONADO
+    private Cliente clienteSeleccionado;
+    private Producto productoSeleccionado;
   
     public Principal() {
         initComponents();
@@ -63,8 +77,9 @@ public class Principal extends javax.swing.JFrame {
         //CENTRAMOS EN PANTALLA
         this.setLocationRelativeTo(null);
         
-        //CENTRAMOS EL DIALOGO CONFIRMACIÓN DE VENTA
+        //CENTRAMOS EL DIALOGO CONFIRMACIÓN DE VENTA Y EL DIALOGO DETALLE VENTA
         jDialog1.setLocationRelativeTo(this);
+        detalleVenta.setLocationRelativeTo(this);
         
         //CENTRAMOS  Y ABRIMOS EL LOGIN
         login.setLocationRelativeTo(null);
@@ -111,6 +126,11 @@ public class Principal extends javax.swing.JFrame {
             
             }
         }); 
+       
+       //INICIAMOS EL CLIENTE Y PRODUCTO SELECCIONADO
+       this.clienteSeleccionado = null;
+       this.productoSeleccionado = null;
+     
     }
     
     //MÉTODO QUE SE ENCARGA DE COMPROBAR EL LOGUEO
@@ -219,6 +239,9 @@ public class Principal extends javax.swing.JFrame {
         jLabel18 = new javax.swing.JLabel();
         textoUsuario = new javax.swing.JTextField();
         textoPassword = new javax.swing.JPasswordField();
+        detalleVenta = new javax.swing.JDialog();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        textDetalleVenta = new javax.swing.JTextArea();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -274,6 +297,8 @@ public class Principal extends javax.swing.JFrame {
         radioProductos = new javax.swing.JRadioButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         listaObjetosBBDD = new javax.swing.JList<>();
+        toggleVentas = new javax.swing.JToggleButton();
+        radioVentas = new javax.swing.JRadioButton();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         listaProductosInsertados = new javax.swing.JList<>();
@@ -391,6 +416,32 @@ public class Principal extends javax.swing.JFrame {
                 .addGap(20, 20, 20))
         );
 
+        detalleVenta.setTitle("Detalle Venta");
+        detalleVenta.setModal(true);
+        detalleVenta.setResizable(false);
+        detalleVenta.setSize(new java.awt.Dimension(501, 297));
+
+        textDetalleVenta.setColumns(20);
+        textDetalleVenta.setRows(5);
+        jScrollPane6.setViewportView(textDetalleVenta);
+
+        javax.swing.GroupLayout detalleVentaLayout = new javax.swing.GroupLayout(detalleVenta.getContentPane());
+        detalleVenta.getContentPane().setLayout(detalleVentaLayout);
+        detalleVentaLayout.setHorizontalGroup(
+            detalleVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detalleVentaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        detalleVentaLayout.setVerticalGroup(
+            detalleVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detalleVentaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -484,7 +535,7 @@ public class Principal extends javax.swing.JFrame {
                         .addGap(38, 38, 38)
                         .addComponent(textNombreCLiente, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(botonInCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -511,7 +562,7 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(textNifCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(botonInCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Cliente", jPanel4);
@@ -574,7 +625,7 @@ public class Principal extends javax.swing.JFrame {
                             .addComponent(textStockAProducto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(textStockMProducto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(textPvpProducto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -601,7 +652,7 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(textPvpProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(botonInProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Producto", jPanel5);
@@ -651,7 +702,7 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        botonProducto.setText("Añadir");
+        botonProducto.setIcon(new javax.swing.ImageIcon("/Users/atack08/NetBeansProjects/EFECTO_2000/Efecto2000/carro_compra_xs.png")); // NOI18N
         botonProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonProductoActionPerformed(evt);
@@ -677,35 +728,36 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(textVentaCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comboBoxClientes, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(textIdVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textCantidadVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(sliderVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                                    .addComponent(comboProductosSeleccionados, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addComponent(botonProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(comboBoxProductos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(8, 8, 8)))))
+                                .addGap(8, 8, 8))
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(textCantidadVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(textIdVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 300, Short.MAX_VALUE))
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addComponent(botonProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(29, 29, 29)
+                                        .addComponent(comboBoxProductos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(textVentaCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(comboBoxClientes, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(sliderVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                            .addComponent(comboProductosSeleccionados, 0, 271, Short.MAX_VALUE))))
                 .addGap(18, 18, 18))
         );
         jPanel6Layout.setVerticalGroup(
@@ -717,21 +769,20 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(textVentaCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboBoxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(botonProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(comboBoxProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(botonProducto))
-                                .addGap(14, 14, 14))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textCantidadVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(sliderVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(comboBoxProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(14, 14, 14)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(textCantidadVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sliderVentas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -739,9 +790,9 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(comboProductosSeleccionados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Venta", jPanel6);
@@ -785,7 +836,8 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -801,6 +853,7 @@ public class Principal extends javax.swing.JFrame {
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Listas BBDD"));
 
         buttonGroup1.add(radioClientes);
+        radioClientes.setFont(new java.awt.Font("Lucida Grande", 0, 10)); // NOI18N
         radioClientes.setText("Clientes");
         radioClientes.setToolTipText("Volver a pulsar el boton deseado al cambiar de BBDD");
         radioClientes.addActionListener(new java.awt.event.ActionListener() {
@@ -810,6 +863,7 @@ public class Principal extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(radioProductos);
+        radioProductos.setFont(new java.awt.Font("Lucida Grande", 0, 10)); // NOI18N
         radioProductos.setText("Productos");
         radioProductos.setToolTipText("Volver a pulsar el boton deseado al cambiar de BBDD");
         radioProductos.addActionListener(new java.awt.event.ActionListener() {
@@ -820,6 +874,7 @@ public class Principal extends javax.swing.JFrame {
 
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        listaObjetosBBDD.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         listaObjetosBBDD.setToolTipText("Hacer doble click para ver detalles del objeto");
         listaObjetosBBDD.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -828,6 +883,24 @@ public class Principal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(listaObjetosBBDD);
 
+        toggleVentas.setText("Filtrar");
+        toggleVentas.setToolTipText("Pulsar para filtrar las ventas a mostrar por el Cliente-Producto seleccionado");
+        toggleVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleVentasActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(radioVentas);
+        radioVentas.setFont(new java.awt.Font("Lucida Grande", 0, 10)); // NOI18N
+        radioVentas.setText("Ventas");
+        radioVentas.setToolTipText("Volver a pulsar el boton deseado al cambiar de BBDD");
+        radioVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioVentasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -835,12 +908,15 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addComponent(radioClientes)
-                        .addGap(27, 27, 27)
+                        .addGap(12, 12, 12)
                         .addComponent(radioProductos)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(radioVentas)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(toggleVentas)))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -849,7 +925,9 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(radioClientes)
-                    .addComponent(radioProductos))
+                    .addComponent(radioProductos)
+                    .addComponent(toggleVentas)
+                    .addComponent(radioVentas))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1)
                 .addContainerGap())
@@ -947,7 +1025,7 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1046,6 +1124,10 @@ public class Principal extends javax.swing.JFrame {
         else{
             if(radioProductos.isSelected())
                 actualizarListaProductos();
+            else{
+                if(radioVentas.isSelected())
+                    actualizarListaVentas();
+            }
         }
             
         //RESETEAMOS EL MAPA DE VENTAS Y EL MODELO PRODUCTOS ELEGIDOS
@@ -1168,7 +1250,7 @@ public class Principal extends javax.swing.JFrame {
     public void actualizarListaClientes(){
         
         //INSTANCIAMOS-RESETEAMOS EL MODELO PARA LA LISTA
-        this.modelolistaObjetos = new DefaultListModel<>();
+        this.modelolistaObjetos = new DefaultListModel<Cliente>();
         //CREAMOS LISTA PARA GUARDAR TODOS LOS CLIENTES Y LLAMAMOS AL MÉTODO DEL GESTOR_BBDD
         ArrayList<Cliente> listaC;
         
@@ -1179,7 +1261,7 @@ public class Principal extends javax.swing.JFrame {
         
         //CARGAMOS LISTA EN EL MODELO
         for(Cliente cliente:listaC){
-            modelolistaObjetos.addElement(cliente.toString());
+            modelolistaObjetos.addElement(cliente);
         }
         
         //ASIGNAMOS MODELO A LA LISTA DE LA INTERFACE GRÁFICA
@@ -1191,7 +1273,7 @@ public class Principal extends javax.swing.JFrame {
     private void actualizarListaProductos(){
         
         //INSTANCIAMOS-RESETEAMOS EL MODELO PARA LA LISTA
-        this.modelolistaObjetos = new DefaultListModel<>();
+        this.modelolistaObjetos = new DefaultListModel<Producto>();
         //CREAMOS LISTA PARA GUARDAR TODOS LOS CLIENTES Y LLAMAMOS AL MÉTODO DEL GESTOR_BBDD
         ArrayList<Producto> listaP;
         
@@ -1202,13 +1284,35 @@ public class Principal extends javax.swing.JFrame {
         
         //CARGAMOS LISTA EN EL MODELO
         for(Producto producto:listaP){
-            modelolistaObjetos.addElement(producto.toString());
+            modelolistaObjetos.addElement(producto);
+        }
+        
+        //ASIGNAMOS MODELO A LA LISTA DE LA INTERFACE GRÁFICA
+        listaObjetosBBDD.setModel(modelolistaObjetos); 
+        
+    }
+    
+    //MÉTODO QUE RELLENA LA LISTA DE VENTAS  EN LA INTERFACE GRÁFICA
+    private void actualizarListaVentas(){
+        
+        //INSTANCIAMOS-RESETEAMOS EL MODELO PARA LA LISTA
+        this.modelolistaObjetos = new DefaultListModel<Venta>();
+        //CREAMOS LISTA PARA GUARDAR TODOS LOS CLIENTES Y LLAMAMOS AL MÉTODO DEL GESTOR_BBDD
+        ArrayList<Venta> listaV = null;
+        
+        if(!this.tipoBBDD.equalsIgnoreCase("db4o"))
+            listaV = gestor1.pedirListaTodosVentas(tipoBBDD);
+        else      
+            listaV = gestor1.pedirListaTodosVentasDB4O();
+        
+        //CARGAMOS LISTA EN EL MODELO
+        for(Venta venta:listaV){
+            modelolistaObjetos.addElement(venta);
         }
         
         //ASIGNAMOS MODELO A LA LISTA DE LA INTERFACE GRÁFICA
         listaObjetosBBDD.setModel(modelolistaObjetos);      
     }
-    
     
     
     
@@ -1218,16 +1322,8 @@ public class Principal extends javax.swing.JFrame {
         if (evt.getClickCount() == 2) {
            
             //SI ESTÁ SELECCIONADA LA LISTA DE CLIENTES Y EL MODELO NO ESTÁ VACIO
-            if(radioClientes.isSelected() && !this.modelolistaObjetos.isEmpty()){
-                String value = listaObjetosBBDD.getSelectedValue();
-                //SACAMOS EL NIF DEL CLIENTE DE LA LISTA
-                String nifCliente = value.substring(0, value.indexOf(" -"));
-                //OBTENEMOS EL OBJETO CLIENTE CON ESE NIF DE LA BBDD SELECCIONADA
-                Cliente cliente;
-                if(this.tipoBBDD.equalsIgnoreCase("db4o"))
-                    cliente = this.gestor1.pedirCLienteDB4O(nifCliente);
-                else
-                    cliente =  this.gestor1.pedirClienteBBDD(nifCliente, this.tipoBBDD);
+            if(radioClientes.isSelected() && !this.modelolistaObjetos.isEmpty()){       
+                Cliente cliente = (Cliente) modelolistaObjetos.getElementAt(listaObjetosBBDD.getSelectedIndex());
                 
                 cargarClienteEnFormulario(cliente);
                 
@@ -1236,18 +1332,21 @@ public class Principal extends javax.swing.JFrame {
             }
             else{
                 if(radioProductos.isSelected() && !this.modelolistaObjetos.isEmpty()){
-                    String value = listaObjetosBBDD.getSelectedValue();
-                    int idProducto = Integer.parseInt(value.substring(0, value.indexOf(" -")));
-                    Producto producto;
-                    
-                    if(this.tipoBBDD.equalsIgnoreCase("db4o"))
-                        producto = this.gestor1.pedirProductoDB4O(idProducto);
-                    else
-                        producto =  this.gestor1.pedirProductoBBDD(idProducto, this.tipoBBDD);
-                
+                    Producto producto = (Producto) modelolistaObjetos.getElementAt(listaObjetosBBDD.getSelectedIndex());
+                   
                     cargarProductoEnFormulario(producto);
                     //SELECCIONAMOS LA PESTAÑA PRODUCTO
                     jTabbedPane2.setSelectedIndex(1);
+                }
+                else{
+                    if(radioVentas.isSelected() && !this.modelolistaObjetos.isEmpty()){
+                        
+                        Venta venta = (Venta) modelolistaObjetos.getElementAt(listaObjetosBBDD.getSelectedIndex());
+                        textDetalleVenta.setText(venta.toStringLargo());
+                        
+                        detalleVenta.setVisible(true);
+                        
+                    }
                 }
             }
             
@@ -1541,22 +1640,80 @@ public class Principal extends javax.swing.JFrame {
     //EVENTO QUE CONFIRMA Y REALIZA INSERCIÓN DE LA VENTA DEFINITIVAMENTE
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         
-        //RESCATAMOS EL CLIENTE SELECCIONADO QUE REALIZA COMPRA
+        //RESCATAMOS EL CLIENTE SELECCIONADO QUE REALIZA COMPRA Y LA FECHA
         Cliente cliente = (Cliente)modeloComboClientes.getSelectedItem();
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        
+        //CONSTRUIMOS LA VENTA A PARTIR DEL MAPA VENTA
+        ArrayList<Linea> listaL = obtenerListaLineas(mapaVenta);
+        int idVenta = Integer.parseInt(textIdVenta.getText());
+        Venta venta = new Venta(idVenta, cliente, listaL, time, totalVenta);
+        
+        //CREAMOS EL ARRAY QUE CONTENDRÁ LOS PRODUCTOS QUE HAN REBAJADO EL 
+        //STOCK MÍNIMO FIJADO EN LA BBDD
+        ArrayList<Producto> listaPStock = null;
         
         //DISTINGUIMOS ENTRE BBDD
         switch (tipoBBDD) {
             case "mysql":
                 //LE PASAMOS EL MAPA DE LA VENTA Y EL CLIENTE
-                gestor1.insertarVentaMysql(cliente, mapaVenta, totalVenta);
+                listaPStock = gestor1.insertarVentaMysql(cliente, mapaVenta, totalVenta, time);
                 break;
             case "sqlite":
-                gestor1.insertarVentaSQLite(cliente, mapaVenta, totalVenta);
+                listaPStock = gestor1.insertarVentaSQLite(cliente, mapaVenta, totalVenta, time);
+                break;
+            case "db4o":
+                listaPStock = gestor1.insertarVentaDB4O(venta);
                 break;
         }
         
+        //RESETEAMOS Y AÑADIMOS LA VENTA AL PANEL DE LA INTERFACE
+        this.modeloListaInsercionVenta =  new DefaultListModel<>();  
+        this.modeloListaInsercionVenta.addElement(venta.toString());
+        
+        //ASGINAMOS EL MODELO A LA LISTA
+        this.listaVentasInsertadas.setModel(modeloListaInsercionVenta);
+        
+        //CERRAMOS EL DIALOG
+        jDialog1.dispose();
+        
+        //MOSTRAMOS LOS PRODUCTOS QUE HAN REBAJADO EL STOCK MÍNIMO  
+        if (!listaPStock.isEmpty()) {
+
+            String cadenaAlerta = "Los siguientes productos han rebajado el stock mínimo:\n";
+            for (Producto p : listaPStock) {
+                cadenaAlerta += p.getId() + " - " + p.getDescripcion() + "\n";
+            }
+            mostrarPanelInfo(cadenaAlerta);
+        }
+    
+        //ACTUALIZAMOS EL ID DE LA VENTA
+        actualizarIdVenta();
+        
+        //ACTUALIZAMOS LA LISTA DE LAS VENTAS
+        actualizarListaVentas();
+        radioVentas.setSelected(true);
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    //MÉTODO QUE CONVIERTE EL MAPA DE VENTA EN UN ARRAYLIST DE LINEAS
+    public ArrayList<Linea> obtenerListaLineas(HashMap<Producto, Integer> mapaV){
+        
+        ArrayList<Linea> listaL = new ArrayList<>();
+        
+        //RECORREMOS EL MAPA Y VAMOS AÑADIENDO A LA LISTA LAS LINEAS
+        Iterator<Producto> it = mapaV.keySet().iterator();
+        while (it.hasNext()) {
+            Producto p = it.next();
+            int idVenta = Integer.parseInt(textIdVenta.getText());
+            
+            listaL.add(new Linea(idVenta, p, mapaV.get(p)));        
+        }
+         
+        return listaL;
+    }
+    
+    
     ///ESCUCHADOR DE EVENTOS PARA EL BOTÓN DE LOGIN
     private void botonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLoginActionPerformed
     
@@ -1576,6 +1733,20 @@ public class Principal extends javax.swing.JFrame {
             textoPassword.setText("");
         }
     }//GEN-LAST:event_botonLoginActionPerformed
+
+    //ESCUCHADOR DE EVENTOS QUE CARGA LA LISTA DE LA INTERFACE CON LAS VENTAS DE LA BBDD SELECCIONADA
+    private void radioVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioVentasActionPerformed
+       
+        actualizarListaVentas();
+    }//GEN-LAST:event_radioVentasActionPerformed
+
+    private void toggleVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleVentasActionPerformed
+
+        /*if(toggleVentas.isSelected())
+            //System.out.println("ON");  SEGUIR AQUIIIIIIIIIIIIII
+        else
+            //System.out.println("OFF");*/
+    }//GEN-LAST:event_toggleVentasActionPerformed
 
     public void configurarTextAreaVenta(){
         
@@ -1608,7 +1779,7 @@ public class Principal extends javax.swing.JFrame {
             }
         }
         
-        //ASIGNAMOS LOS MODELOS A LAS LISTAS D ELA INTERFACE
+        //ASIGNAMOS LOS MODELOS A LAS LISTAS DE LA INTERFACE
         listaClientesInsertados.setModel(modeloListaInsercionCliente);
         listaProductosInsertados.setModel(modeloListaInsercionProducto);
         listaVentasInsertadas.setModel(modeloListaInsercionVenta);
@@ -1767,6 +1938,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JComboBox<Producto> comboBoxProductos;
     private javax.swing.JComboBox<Producto> comboProductosSeleccionados;
     private javax.swing.JComboBox<String> comboTipoBBDD;
+    private javax.swing.JDialog detalleVenta;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -1803,6 +1975,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel labelFichero;
@@ -1813,12 +1986,14 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JDialog login;
     private javax.swing.JRadioButton radioClientes;
     private javax.swing.JRadioButton radioProductos;
+    private javax.swing.JRadioButton radioVentas;
     private javax.swing.JRadioButton radioXML;
     private javax.swing.JRadioButton radiobbdd;
     private javax.swing.JSlider sliderVentas;
     private javax.swing.JTextField textCantidadVenta;
     private javax.swing.JTextArea textConfVenta;
     private javax.swing.JTextField textDesProducto;
+    private javax.swing.JTextArea textDetalleVenta;
     private javax.swing.JTextField textDirCliente;
     private javax.swing.JTextField textIdProducto;
     private javax.swing.JTextField textIdVenta;
@@ -1832,5 +2007,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField textVentaCliente;
     private javax.swing.JPasswordField textoPassword;
     private javax.swing.JTextField textoUsuario;
+    private javax.swing.JToggleButton toggleVentas;
     // End of variables declaration//GEN-END:variables
 }

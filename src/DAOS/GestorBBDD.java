@@ -3,6 +3,7 @@ package DAOS;
 
 import BEANS.Cliente;
 import BEANS.Hilo_BarraProgreso;
+import BEANS.Linea;
 import BEANS.Producto;
 import BEANS.Venta;
 //IMPORTACIONES NECESARIAS PARA TRABAJAR CON LA BBDD DB4O
@@ -75,9 +76,11 @@ public class GestorBBDD {
     private final String insercionLinea = "insert into lineas (idventa,idproducto,cantidad) values (?,?,?)";
     private final String cambioStockProducto = "update productos set stockactual = ? where id = ?";
     private final String comprobarStockMinimo = "select (stockactual - stockminimo)from productos where id = ?";
+    private final String consultaPedirTodasVentas = "select idventa,fechaventa,cliente,total from ventas";
+    private final String consultaTodasLineasVenta = "select idproducto,cantidad from lineas where idventa=?";
     
     //LLAMADAS A PROCEDIMIENTOS  Y FUNCIONES ALMACENADOS
-    private final String llamadaProcedimientoInsertarVenta = "{call insertarVenta (?,?)}";
+    private final String llamadaProcedimientoInsertarVenta = "{call insertarVenta (?,?,?)}";
     private final String llamadaProcedimientoInsertarLinea = "{call insertarLinea (?,?,?)}";
     private final String funcionCambioStock = "select cambioStock(?,?)";
     
@@ -407,18 +410,9 @@ public class GestorBBDD {
     public ArrayList<Cliente> pedirListaTodosClientes(String tipoBBDD){
         
         ArrayList<Cliente> listaC = new ArrayList<>();
-        Connection cn=null;
+        Connection cn= crearConexion(tipoBBDD);
         try {
-             
-            switch (tipoBBDD) {
-                case "mysql":
-                    cn = conexionMysql();
-                    break;
-                case "sqlite":
-                    cn = conexionSQLITE();
-                    break;            
-            }
-            
+  
             this.preparedBusquedaObjeto =  cn.prepareStatement(this.consultaTodosClientes);
             //CREAMOS RESULTSET PARA EL RESULTADO DE LA CONSULTA Y LO VAMOS RECORRIENDO PARA 
             //CREAR LOS OBJETOS CLIENTE Y GUARDARLOS EN LA LISTA A DEVOLVER
@@ -446,17 +440,9 @@ public class GestorBBDD {
     public ArrayList<Producto> pedirListaTodosProductos(String tipoBBDD){
         
         ArrayList<Producto> listaP = new ArrayList<>();
-        Connection cn=null;
+        Connection cn=crearConexion(tipoBBDD);
         try {
-             
-            switch (tipoBBDD) {
-                case "mysql":
-                    cn = conexionMysql();
-                    break;
-                case "sqlite":
-                    cn = conexionSQLITE();
-                    break;            
-            }          
+                          
             this.preparedBusquedaObjeto =  cn.prepareStatement(this.consultaTodosProductos);
             //CREAMOS RESULTSET PARA EL RESULTADO DE LA CONSULTA Y LO VAMOS RECORRIENDO PARA 
             //CREAR LOS OBJETOS PRODUCTO Y GUARDARLOS EN LA LISTA A DEVOLVER
@@ -518,19 +504,9 @@ public class GestorBBDD {
     //SI EL CLIENTE NO EXITE DEVOLVERÁ NULL
     public Cliente pedirClienteBBDD(String nif, String tipoBBDD){
         
+        Connection cn = crearConexion(tipoBBDD);
         Cliente cliente = null;
-        Connection cn = null;
         
-        //CREAMOS CONEXIÓN DEPENDIENDO DEL TIPO SELECCIONADO
-        switch (tipoBBDD) {
-            case "mysql":
-                cn = conexionMysql();
-                break;
-            case "sqlite":
-                cn = conexionSQLITE();
-                break;      
-        }
- 
         try {
             this.preparedBusquedaObjeto = cn.prepareStatement(this.consultaCliente);
             
@@ -562,18 +538,9 @@ public class GestorBBDD {
     //SI EL PRODUCTO NO EXITE DEVOLVERÁ NULL
     public Producto pedirProductoBBDD(int id, String tipoBBDD){
         
+        Connection cn = crearConexion(tipoBBDD);
         Producto producto = null;
-        Connection cn = null;
         
-        //CREAMOS CONEXIÓN DEPENDIENDO DEL TIPO SELECCIONADO
-        switch (tipoBBDD) {
-            case "mysql":
-                cn = conexionMysql();
-                break;
-            case "sqlite":
-                cn = conexionSQLITE();
-                break;      
-        } 
         try {
             this.preparedBusquedaObjeto = cn.prepareStatement(this.consultaProducto);
             
@@ -644,18 +611,8 @@ public class GestorBBDD {
     //MÉTODO QUE INGRESA O MODIFICA UN CLIENTE DEPENDIENDO SI EXISTE O NO EN LA BASE DE DATOS
     public int insertarClienteBBDD(Cliente cliente,String tipoBBDD){
         
-        Connection cn = null;
-        
-        //CREAMOS CONEXIÓN DEPENDIENDO DEL TIPO SELECCIONADO
-        switch (tipoBBDD) {
-            case "mysql":
-                cn = conexionMysql();
-                break;
-            case "sqlite":
-                cn = conexionSQLITE();
-                break;      
-        } 
-        
+        Connection cn = crearConexion(tipoBBDD);
+  
         try {
             //COMPROBAMOS SI EL CLIENTE EXISTE YA O NO EN LA BBDD
             //SI EXISTE CARGAMOS LA CONSULTA DE UPDATE EN EL PREPAREDSTATEMENT
@@ -691,18 +648,8 @@ public class GestorBBDD {
     //MÉTODO QUE INSERTA-ACTUALIZA UN PRODUCTO EN LA BBDD SELECCIONADA
     public int insertarProductoBBDD(Producto producto, String tipoBBDD){
         
-        Connection cn = null;
-        
-        //CREAMOS CONEXIÓN DEPENDIENDO DEL TIPO SELECCIONADO
-        switch (tipoBBDD) {
-            case "mysql":
-                cn = conexionMysql();
-                break;
-            case "sqlite":
-                cn = conexionSQLITE();
-                break;      
-        } 
-        
+        Connection cn = crearConexion(tipoBBDD);
+  
         try {
             //COMPROBAMOS SI EL PRODUCTO EXISTE YA O NO EN LA BBDD
             //SI EXISTE CARGAMOS LA CONSULTA DE UPDATE EN EL PREPAREDSTATEMENT
@@ -776,17 +723,17 @@ public class GestorBBDD {
         //ABRIMOS LA BBDD DB4O
         this.db4oC = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "efecto2000.yap");
         //ESPECIFICAMOS QUE CLASE DE OBJETO QUEREMOS BUSCAR EN LA BBDD
-        Class<Venta> vt = Venta.class;
-        ObjectSet<Venta> res =  this.db4oC.query(vt);
+        ObjectSet<Venta> result =  this.db4oC.queryByExample(new Venta());
         
         //SI EL RESULTSET ESTÁ VACIO DEVOLVEMOS 1 Y SI NO  BUSCAMOS EL MAX ID
-        if(!res.isEmpty()){
-            for(Venta venta: res){
+        if(!result.isEmpty()){
+            for(Venta venta: result){
+                
                 if(venta.getId_venta() > id)
-                    id = venta.getId_venta();
+                    id = venta.getId_venta();           
             }   
             
-            id = id++;
+            id = id + 1;
         }
         else
             id = 1;
@@ -954,19 +901,9 @@ public class GestorBBDD {
     //MÉTODO QUE DEVUELVE UN ENTERO CON EL STOCK ACTUAL DEL PRODUCTO
     public int pedirStockActualProducto(String tipoBBDD, int idProducto){
         
-        Connection cn = null;
+        Connection cn = crearConexion(tipoBBDD);
         int stockProducto = 0;
-        
-        //CREAMOS CONEXIÓN DEPENDIENDO DEL TIPO SELECCIONADO
-        switch (tipoBBDD) {
-            case "mysql":
-                cn = conexionMysql();
-                break;
-            case "sqlite":
-                cn = conexionSQLITE();
-                break;      
-        } 
-        
+
         try {        
             preparedBusquedaObjeto = cn.prepareStatement(consultaStockActualProducto);
             preparedBusquedaObjeto.setInt(1, idProducto);
@@ -1010,7 +947,7 @@ public class GestorBBDD {
     //MÉTODO QUE INSERTA UNA VENTA CON SUS CORRESPONDIENTES LINEAS EN LA BBDD MYSQL
     //PARA ELLO UTILIZARÁ 2 FUNCIONES ALMACENADAS EN MYSQL Y 1 FUNCIÓN QUE ACTUALIZARÁ EL STOCK
     //DEVOLVIENDO 0 - 1 DEPENDIENDO SI SE HA ALCANZADO EL STOCK MINIMO
-    public ArrayList<Producto> insertarVentaMysql (Cliente cliente, HashMap<Producto, Integer> mapaVenta, float totalVenta){
+    public ArrayList<Producto> insertarVentaMysql (Cliente cliente, HashMap<Producto, Integer> mapaVenta, float totalVenta, Timestamp fecha){
         
         //CREAMOS ARRAYLIST PARA IR GUARDANDO LOS PRODUCTOS QUE HAN REBAJADO EL STOCKMINIMO
         //PARA MOSTRARLOS AL TERMINAR EL MÉTODO
@@ -1027,8 +964,9 @@ public class GestorBBDD {
             preparedInsercion = cn.prepareStatement(this.funcionCambioStock);
             
             //CONFIGURAMOS LOS PARÁMETROS
-            callP.setString(1, cliente.getNif());
-            callP.setFloat(2, totalVenta);
+            callP.setTimestamp(1, fecha);
+            callP.setString(2, cliente.getNif());
+            callP.setFloat(3, totalVenta);
             
             //EJECUTAMOS EL PROCEDIMIENTO, NO DEVUELVE RESULTADO
             callP.execute();
@@ -1093,7 +1031,7 @@ public class GestorBBDD {
     //MÉTODO QUE INSERTA UNA VENTA Y SUS RESPECTIVAS LINEAS EN LA BBDD SQLITE
     //DEVUELVE UNA LISTA CON LOS PRODUCTOS QUE HAN REBAJADO EL STOCK MINIMO
     
-    public ArrayList<Producto> insertarVentaSQLite(Cliente cliente, HashMap<Producto, Integer> mapaVenta, float totalVenta){
+    public ArrayList<Producto> insertarVentaSQLite(Cliente cliente, HashMap<Producto, Integer> mapaVenta, float totalVenta, Timestamp timeS){
         
         ArrayList<Producto> listaP =  new ArrayList<>();
         
@@ -1102,10 +1040,7 @@ public class GestorBBDD {
             //INSTANCIAMOS PREPARED STATEMENT
             Connection cn = conexionSQLITE();
             preparedInsercion =  cn.prepareStatement(this.insercionVenta);
-            
-            //RESCATAMOS TIMESTAMP
-            Timestamp timeS = new Timestamp( System.currentTimeMillis());
-                        
+                      
             //CONFIGURAMOS PARÁMETROS E INSERTAMOS
             preparedInsercion.setTimestamp(1, timeS);
             preparedInsercion.setString(2, cliente.getNif());
@@ -1173,7 +1108,150 @@ public class GestorBBDD {
         return listaP;
     }
     
+    //MÉTODO PARA INSERTAR UNA VENTA Y SUS LINEAS EN LA BBDD DB4O
+    //DEVOLVERÁ LA LISTA DE PRODUCTOS QUE HAN REBAJADO EL STOCK MÍNIMO
+    public ArrayList<Producto> insertarVentaDB4O(Venta venta){
+        
+        ArrayList<Producto> listaP = new ArrayList<>();
+        
+        //ABRIMOS LA BBDD DB4O
+        this.db4oC = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "efecto2000.yap");
+        
+        //INSERTAMOS LA VENTA, NO COMPROBAMOS SI ESTÁ EN LA BBDD PORQUE LA VENTA YA VIENE
+        //CON EL SIGUIENTE ID DISPONIBLE, ASI QUE NO HAY POSIBILIDAD DE QUE SE REPITA
+        this.db4oC.store(venta);
+        
+        //INSERTAMOS  LAS LINEAS
+        for(Linea linea:venta.getLineas()){
+                   
+            //RESCATAMOS EL PRODUCTO DE LA BBDD
+            ObjectSet<Producto> result = this.db4oC.queryByExample(new Producto(linea.getProducto().getId()));
+            Producto productoBBDD = result.next();
+            
+            //ACTUALIZAMOS STOCK DE PRODUCTOS
+             productoBBDD.setStockActual(productoBBDD.getStockActual() - linea.getCantidad());
+            //COMPROBAMOS STOCKMINIMO
+            if(productoBBDD.getStockActual() < productoBBDD.getStockMinimo())
+                listaP.add(productoBBDD);
+            
+            //GUARDAMOS EL PRODUCTO MODIFICADO EN LA BBDD
+            this.db4oC.store(productoBBDD);
+            
+            //GUARDAMOS LA LINEA EN LA BBDD
+            this.db4oC.store(linea);
+        }
+        
+        //CERRAMOS BBDD
+        this.db4oC.close();
+          
+        return listaP;
+    }
     
+    //MÉTDO QUE DEVUELVE TODOS LAS VENTAS DE ALMACENADAS EN LA BBDD
+    public ArrayList<Venta> pedirListaTodosVentas (String tipoBBDD){
+        //CREAMOS LA LISTA QUE VAMOS A DEVOLVER Y LA CONEXIÓN A LA BBBDD
+        ArrayList<Venta> listaV = new ArrayList<>();
+        //LISTA PARA GUARDAR LOS NIFS DE LOS CLIENTES
+        ArrayList<String> listaNif = new ArrayList<>();
+            
+        try {                   
+           //CREAMOS CONEXIÓN DEPENDIENDO DEL TIPO SELECCIONADO
+            Connection cn =  crearConexion(tipoBBDD);
+            
+            this.preparedBusquedaObjeto = cn.prepareStatement(this.consultaPedirTodasVentas);
+            ResultSet rs = preparedBusquedaObjeto.executeQuery();
+    
+            //RECORREMOS LAS VENTAS
+            while(rs.next()){
+                     
+                //RESCATAMOS EL ID DE LA VENTA
+                int idVenta = rs.getInt(1);
+                
+                //OBTENEMOS EL NIF, FECHA Y TOTAL 
+                String nif = rs.getString(3);
+                Date fechaVEnta = new Date(rs.getTimestamp(2).getTime());
+                     
+                float totalVenta = rs.getFloat(4);
+                
+                listaV.add(new Venta(idVenta, null, null, fechaVEnta, totalVenta));   
+                listaNif.add(nif);
+            }
+            
+            rs.close();     
+            preparedBusquedaObjeto.close();
+            cn.close();
+            
+            //AÑADIMOS LAS LINEAS Y CLIENTES CORRESPONDIENTES PARA CADA VENTA
+            for(Venta venta:listaV){
+                String n = listaNif.get(listaV.indexOf(venta));
+               
+                venta.setLineas(pedirListaLineasVenta(venta.getId_venta(),tipoBBDD));
+                venta.setCliente(pedirClienteBBDD(n, tipoBBDD));
+            }
+          
+        } catch (SQLException ex) {
+            mostrarPanelError(ex.getLocalizedMessage());
+        }
+        return listaV;
+    }
+    
+    //MÉTODO QUE DEVUELVE UNA LISTA DE LINEAS DE UNA VENTA DETERMINADA
+    public ArrayList<Linea> pedirListaLineasVenta(int idVenta, String tipoBBDD){
+        
+        ArrayList<Linea> listL = new ArrayList<>();
+        Connection cn = crearConexion(tipoBBDD);
+        
+        //LISTA PARA AÑADIR MAS TARDE A LAS LINEAS SUS PRODUCTOS
+        ArrayList<Integer> listaP = new ArrayList<>();
+        
+        try {
+            this.preparedBusquedaObjeto = cn.prepareStatement(this.consultaTodasLineasVenta);
+            preparedBusquedaObjeto.setInt(1, idVenta);
+            
+            ResultSet rs = preparedBusquedaObjeto.executeQuery();
+            while (rs.next()) {      
+                int idP = rs.getInt(1);            
+                listL.add(new Linea(idVenta, null, rs.getInt(2))); 
+                listaP.add(new Integer(idP));
+            }
+
+            rs.close();
+            preparedBusquedaObjeto.close();
+            cn.close();
+            
+            //AÑADIMOS LOS PRODUCTOS A LAS DIFERENTES LINEAS
+            for(int i=0 ; i< listL.size(); i++){
+                
+                int idProducto = listaP.get(i);     
+                listL.get(i).setProducto(pedirProductoBBDD(idProducto, tipoBBDD));
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorBBDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return listL;
+    }
+    
+    //PEDIR TODAS LAS VENTAS DE LA BBDD EN DB4O
+    public ArrayList<Venta> pedirListaTodosVentasDB4O(){
+        
+        ArrayList<Venta> listaV = new ArrayList<>();
+ 
+        //ABRIMOS LA BBDD DB4O
+        this.db4oC = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "efecto2000.yap");
+        //ESPECIFICAMOS QUE CLASE DE OBJETO QUEREMOS BUSCAR EN LA BBDD
+        ObjectSet<Venta> result =  this.db4oC.queryByExample(new Venta());
+  
+        if(!result.isEmpty()){
+            
+            for(Venta venta: result){
+                listaV.add(venta);
+            }
+        }
+        this.db4oC.close();
+        return listaV;
+    }
     
     
     public void setFicheroXML(File ficheroXML) {
