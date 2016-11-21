@@ -954,6 +954,11 @@
                           </Events>
                         </Component>
                         <Component class="javax.swing.JButton" name="botonProducto">
+                          <Properties>
+                            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                              <Image iconType="3" name="/GRAFICAS/carro_compra_xs.png"/>
+                            </Property>
+                          </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonProductoActionPerformed"/>
                           </Events>

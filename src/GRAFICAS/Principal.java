@@ -702,6 +702,7 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        botonProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GRAFICAS/carro_compra_xs.png"))); // NOI18N
         botonProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonProductoActionPerformed(evt);
