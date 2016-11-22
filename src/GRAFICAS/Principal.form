@@ -1124,6 +1124,11 @@
                 </Component>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane1">
                   <Properties>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                        <TitledBorder title="Ventas"/>
+                      </Border>
+                    </Property>
                     <Property name="verticalScrollBarPolicy" type="int" value="22"/>
                   </Properties>
                   <AuxValues>
@@ -1155,6 +1160,7 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Filtrar"/>
                     <Property name="toolTipText" type="java.lang.String" value="Pulsar para filtrar las ventas a mostrar por el Cliente-Producto seleccionado"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleVentasActionPerformed"/>

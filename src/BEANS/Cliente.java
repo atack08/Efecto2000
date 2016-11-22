@@ -4,7 +4,6 @@ import java.util.Objects;
 
 public class Cliente {
 
-    private int id;
     private String nombre;
     private String direccion;
     private String poblacion;
@@ -25,13 +24,8 @@ public class Cliente {
         this.nif= nif;
     }
 
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+   
+   
 
     public String getNombre() {
         return this.nombre;
@@ -78,7 +72,8 @@ public class Cliente {
     }
     
     public String toStringLargo(){
-        return "Cliente{id=" + this.id + ", nombre=" + this.nombre + ", direccion=" + this.direccion + ", poblacion=" + this.poblacion + ", telefono=" + this.telefono + ", nif=" + this.nif + '}';
+        return this.nombre + "("+ nif +")" + ", " + direccion + " - " + poblacion
+                + ", tel: " + telefono;
 
     }
 

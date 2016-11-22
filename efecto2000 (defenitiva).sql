@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-11-2016 a las 08:55:36
+-- Tiempo de generación: 22-11-2016 a las 10:53:59
 -- Versión del servidor: 5.7.14
 -- Versión de PHP: 5.6.25
 
@@ -28,8 +28,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarLinea` (IN `idVenta` INT, I
     INSERT INTO lineas (idventa,idproducto,cantidad) values (idVenta,idProducto,cantidad);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarVenta` (IN `nifCliente` VARCHAR(10), IN `total` FLOAT)  BEGIN
-    INSERT INTO ventas (cliente,total) values (nifCliente,total);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarVenta` (IN `fecha` TIMESTAMP, IN `nifCliente` VARCHAR(10), IN `total` FLOAT)  BEGIN
+    INSERT INTO ventas (fechaventa,cliente,total) values (fecha,nifCliente,total);
 END$$
 
 --
@@ -70,7 +70,6 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`nif`, `nombre`, `direccion`, `poblacion`, `telefono`) VALUES
-('11111111-M', 'Cliente Prueba', 'Cl Repsol Honda', 'Madrid', '917325566'),
 ('42598326-M', 'Javier Serrano Graziati', 'Avda Iruña Veleia 1', 'Vitoria', '945060205'),
 ('44458997-M', 'Marta Rojas Fernandez', 'Cl Madeo Lopez', 'Madrid', '913652250'),
 ('45896321-N', 'Lucia Mariñas Paolin', 'Avda Mateo Renzi 1', 'Madrid', '917356922'),
@@ -121,21 +120,23 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `descripcion`, `stockactual`, `stockminimo`, `pvp`) VALUES
-(115544, 'Samsung Galaxy Note 7', 6, 2, 599.8),
-(122122, 'Apple Iphone 7 Plus', 11, 2, 769.9),
-(122187, 'Apple Iphone 6S Plus', 21, 2, 699.99),
-(122228, 'Nvidia GTX 1060', 16, 2, 360),
-(122547, 'CPU Intel i5-6600K 4.00Gh', 12, 2, 210),
+(115544, 'Samsung Galaxy Note 7', 4, 2, 599.8),
+(122122, 'Apple Iphone 7 Plus', 14, 2, 769.9),
+(122187, 'Apple Iphone 6S Plus', 8, 2, 699.99),
+(122228, 'Nvidia GTX 1060', 12, 2, 360),
+(122547, 'CPU Intel i5-6600K 4.00Gh', 11, 2, 210),
 (122555, 'Portátil HP Pavilion 1150', 3, 1, 850.9),
 (122634, 'CPU Intel i7-6600 3.80Gh', 1, 2, 220),
 (122659, 'CPU Intel i7-6700K 4.00Ghz', 15, 2, 350),
 (122994, '2x8GB RAM DDR4 2133Mhz', 32, 10, 89.99),
-(123123, 'Monitor Samsung 4k', 10, 1, 490),
-(123659, 'Nvidia GTX 1080', 10, 1, 650),
+(123123, 'Monitor Samsung 4k', 8, 1, 490),
+(123659, 'Nvidia GTX 1080', 16, 1, 650),
 (123748, 'Nvidia GTX 1070', 5, 1, 520),
 (123999, 'Placa Asus Z150-VE', 6, 1, 110.5),
 (142855, 'Placa Base Asus Z170', 5, 1, 125.9),
-(222145, 'Nvidia GTX 980 4GB', 10, 2, 340.2);
+(222145, 'Nvidia GTX 980 4GB', 10, 2, 340.2),
+(325611, 'Intel i5 6500 3.00Ghz', 4, 2, 215.99),
+(325623, 'Intel i5 6600k 4.00Ghz', 7, 2, 250.99);
 
 -- --------------------------------------------------------
 
@@ -146,7 +147,7 @@ INSERT INTO `productos` (`id`, `descripcion`, `stockactual`, `stockminimo`, `pvp
 CREATE TABLE `ventas` (
   `idventa` int(11) NOT NULL,
   `fechaventa` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `cliente` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliente` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
   `total` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
@@ -188,7 +189,7 @@ ALTER TABLE `ventas`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `idventa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idventa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- Restricciones para tablas volcadas
 --

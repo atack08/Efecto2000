@@ -28,8 +28,10 @@ import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -872,6 +874,7 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder("Ventas"));
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         listaObjetosBBDD.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
@@ -885,6 +888,7 @@ public class Principal extends javax.swing.JFrame {
 
         toggleVentas.setText("Filtrar");
         toggleVentas.setToolTipText("Pulsar para filtrar las ventas a mostrar por el Cliente-Producto seleccionado");
+        toggleVentas.setEnabled(false);
         toggleVentas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 toggleVentasActionPerformed(evt);
@@ -1233,17 +1237,23 @@ public class Principal extends javax.swing.JFrame {
 
     //EVENTO QUE CONTROLA EL RADIO CLIENTES- MUESTRA TODOS LOS CLIENTES DE UNA DETERMINADA BBDD
     private void radioClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioClientesActionPerformed
-        
+        //DESHABILITAMOS EL FILTRO
+        toggleVentas.setEnabled(false);
+        toggleVentas.setSelected(false);
         //LLAMAMOS AL MÉTODO QUE ACTUALIZA LA LISTA DE CLIENTES
        actualizarListaClientes();
+        cambiarTituloLista("Clientes");
         
     }//GEN-LAST:event_radioClientesActionPerformed
 
     //EVENTO QUE CONTROLA EL RADIO PRODUCTOS- MUESTRA TODOS LOS CLIENTES DE UNA DETERMINADA BBDD
     private void radioProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioProductosActionPerformed
-        
+        //DESHABILITAMOS EL FILTRO
+        toggleVentas.setEnabled(false);
+        toggleVentas.setSelected(false);
         //LLAMAMOS AL MÉTODO QUE ACTUALIZA LA LISTA DE PRODUCTOS
         actualizarListaProductos();
+        cambiarTituloLista("Productos");
     }//GEN-LAST:event_radioProductosActionPerformed
     
 //MÉTODO QUE RELLENA LA LISTA DE CLIENTES EN LA INTERFACE GRÁFICA
@@ -1315,9 +1325,20 @@ public class Principal extends javax.swing.JFrame {
     }
     
     
-    
+    //EVENTO QUE MANEJA LA SELECCIONE DE LOS CHECKBOX PARA EL TIPO DE OBJETO  A MOSTRAR
     private void listaObjetosBBDDMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaObjetosBBDDMouseClicked
        
+        //SELECCIONAMOS EL PRODUCTO O CLIENTE DE LA CLASE PARA PODER FILTRAR LAS VENTAS
+        //SEGÚN ESTÉ EL RADIO SELECCIONADO
+        if(radioClientes.isSelected())
+            this.clienteSeleccionado =(Cliente)
+                    modelolistaObjetos.getElementAt(listaObjetosBBDD.getSelectedIndex());
+        else
+            if(radioProductos.isSelected())
+                this.productoSeleccionado = (Producto)
+                        modelolistaObjetos.getElementAt(listaObjetosBBDD.getSelectedIndex());
+            
+        
         //SI HACEMOS DOBLE CLICK EN UN VALOR DE LA LISTA
         if (evt.getClickCount() == 2) {
            
@@ -1694,6 +1715,11 @@ public class Principal extends javax.swing.JFrame {
         actualizarListaVentas();
         radioVentas.setSelected(true);
         
+        //RESETEAMOS EL MODELO DE PRODUCTOS ELEGIDOS
+        modeloComboProdElegidos.removeAllElements();
+        toggleVentas.setSelected(false);
+        cambiarTituloLista("Ventas");
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     //MÉTODO QUE CONVIERTE EL MAPA DE VENTA EN UN ARRAYLIST DE LINEAS
@@ -1738,16 +1764,70 @@ public class Principal extends javax.swing.JFrame {
     private void radioVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioVentasActionPerformed
        
         actualizarListaVentas();
+        toggleVentas.setSelected(false);
+        toggleVentas.setEnabled(true);
+        cambiarTituloLista("Ventas");
     }//GEN-LAST:event_radioVentasActionPerformed
 
+    //ESCUCHADOR DE EVENTOS GENERADOS POR EL BOTON TOOGLE -  FILTRAR
     private void toggleVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleVentasActionPerformed
 
-        /*if(toggleVentas.isSelected())
-            //System.out.println("ON");  SEGUIR AQUIIIIIIIIIIIIII
-        else
-            //System.out.println("OFF");*/
+        if(toggleVentas.isSelected()){
+            
+            if(this.clienteSeleccionado != null){
+                //FILTRAMOS POR EL CLIENTE SELECCIONADO
+                Float t = filtrarListaCliente(this.clienteSeleccionado);
+                
+                DecimalFormat df = new DecimalFormat("###.##");
+                String total = df.format(t);
+                
+                String titulo = clienteSeleccionado.getNombre()
+                    + "   Total: " + total + "€";
+                
+                //CAMBIAMOS EL TITULO AL BORDE PARA MOSTRAR EL CLIENTE CON EL QUE
+                //SE REALIZO EL FILTRO DE VENTAS
+                cambiarTituloLista(titulo);
+            }
+            else
+                mostrarPanelError("No se ha seleccionado ningún criterio para filtrar");
+        }
+        else{
+             actualizarListaVentas();
+             cambiarTituloLista("Ventas");
+             
+        }
+           
+      
     }//GEN-LAST:event_toggleVentasActionPerformed
-
+    //MÉTODO QUE CAMBIA EL TITULO DEL PANES SCROLL DE LA LISTA DE OBJETOS
+    public void cambiarTituloLista(String titulo){
+        TitledBorder tb = (TitledBorder)jScrollPane1.getBorder();
+        tb.setTitle(titulo);
+        repaint();
+    }
+    
+    
+    //MÉTODO QUE DEJA EN EL MODELO DE LA LISTA DE OBJETOS
+    //LAS VENTAS FILTRADAS POR UN DETERMINADO CLIENTE
+    //DEVUELVE EL TOTAL DE LAS VENTAS DE ESE CLIENTE
+    public float filtrarListaCliente(Cliente cliente){
+        
+        //RECORREMOS TODOS LAS VENTAS DEL MODELO
+        //SI EL CLIENTE DE ESA VENTA NO ES EL DESEADO LA BORRAMOS DEL MODELO
+        float totalVentas=0;
+        Object[] ventas = modelolistaObjetos.toArray();
+        for(Object v: ventas){
+            Venta venta = (Venta)v;
+            if(!venta.getCliente().equals(cliente))
+                modelolistaObjetos.removeElement(venta);
+            else
+                totalVentas = totalVentas + venta.getTotal();               
+        }
+        
+        return totalVentas;
+    }
+    
+    //MÉTODO QUE FORMATEA EL TEXT AREA UTILIZADO PARA MOSTRAR LA INFO DE UNA VENTA
     public void configurarTextAreaVenta(){
         
         String cadena1 = "JAVIER SERRANO GRAZAITI";
