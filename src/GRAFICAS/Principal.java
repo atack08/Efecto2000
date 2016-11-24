@@ -1921,8 +1921,6 @@ public class Principal extends javax.swing.JFrame {
         this.listaProductosInsertados.setModel(modeloListaInsercionProducto);
     }
     
-
-    
     //MÉTODO PARA FORMATEAR EL AREA DE TEXTO DEL DIALOGO DE CONFIRMACIÓN DE VENTA
     public void formatearConfirmacionDeVenta(){
         
