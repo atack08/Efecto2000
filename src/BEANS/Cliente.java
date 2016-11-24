@@ -24,9 +24,6 @@ public class Cliente {
         this.nif= nif;
     }
 
-   
-   
-
     public String getNombre() {
         return this.nombre;
     }

@@ -132,6 +132,10 @@ public class Principal extends javax.swing.JFrame {
        //INICIAMOS EL CLIENTE Y PRODUCTO SELECCIONADO
        this.clienteSeleccionado = null;
        this.productoSeleccionado = null;
+       
+       //SELECCIONAMOS EL RADIO CLIENTES
+       radioClientes.setSelected(true);
+       actualizarListaClientes();
      
     }
     
@@ -1229,6 +1233,13 @@ public class Principal extends javax.swing.JFrame {
         //CARGAMOS LAS INSERCIONES EN LAS DIFERENTES LISTAS DE LA INTERFACE
         cargarListaInserciones( listaCI, listaPI);
         
+        //ACTUALIZAMOS LAS LISTAS DE CLIENTES Y PRODUCTOS
+        if(radioClientes.isSelected())
+            actualizarListaClientes();
+        else
+            if(radioProductos.isSelected())
+                actualizarListaProductos();
+        
         //ACTUALIZAMOS LAS LISTAS DEPRODUCTOS Y CLIENTES DE LA PESTAÑA VENTAS
         actualizarComboClientes();
         actualizarComboProductos();
@@ -1910,13 +1921,7 @@ public class Principal extends javax.swing.JFrame {
         this.listaProductosInsertados.setModel(modeloListaInsercionProducto);
     }
     
-    public void mostrarInsercionVentaPanel(){
-        
-        
-        
-    }
-    
-    ///FIN METODOS PARA VISUALIZAR EN LOS PANELES DE INSERCIÓN
+
     
     //MÉTODO PARA FORMATEAR EL AREA DE TEXTO DEL DIALOGO DE CONFIRMACIÓN DE VENTA
     public void formatearConfirmacionDeVenta(){
