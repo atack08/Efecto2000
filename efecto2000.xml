@@ -133,6 +133,13 @@
       <TELEFONO>917341021</TELEFONO>
       <NIF>46235987-M</NIF>
     </CLIENTE>
+    <CLIENTE>
+      <NOMBRE>Javier Serrano Aparicio</NOMBRE>
+      <DIRECCION>Avda Iruña Veleia 1</DIRECCION>
+      <POBLACION>Vitoria</POBLACION>
+      <TELEFONO>945060205</TELEFONO>
+      <NIF>42598326-K</NIF>
+    </CLIENTE>
   </CLIENTES>
   <PRODUCTOS>
     <PRODUCTO>
