@@ -129,6 +129,9 @@ public class Principal extends javax.swing.JFrame {
             }
         }); 
        
+       //PANTALLA COMPLETA
+       this.setExtendedState(MAXIMIZED_BOTH);
+       
        //INICIAMOS EL CLIENTE Y PRODUCTO SELECCIONADO
        this.clienteSeleccionado = null;
        this.productoSeleccionado = null;
@@ -451,7 +454,7 @@ public class Principal extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
+        setExtendedState(MAXIMIZED_BOTH);
 
         jTabbedPane1.setPreferredSize(new java.awt.Dimension(1366, 768));
 
