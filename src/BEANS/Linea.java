@@ -5,6 +5,7 @@
  */
 package BEANS;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 /**
@@ -22,6 +23,13 @@ public class Linea {
         this.producto = producto;
         this.cantidad = cantidad;
     }
+    
+    public Linea(Producto producto, int cantidad) {
+     
+        this.producto = producto;
+        this.cantidad = cantidad;
+    }
+    
 
     public int getIdVenta() {
         return idVenta;
@@ -38,12 +46,23 @@ public class Linea {
     public void setProducto(Producto producto) {
         this.producto = producto;
     }
+
+    public void setIdVenta(int idVenta) {
+        this.idVenta = idVenta;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+    
+    
     
     
 
     @Override
     public String toString() {
-        return "Linea{" + "idVenta=" + idVenta + ", producto=" + producto + ", cantidad=" + cantidad + '}';
+        DecimalFormat df = new DecimalFormat("###.##");
+        return producto.getDescripcion() + "  ----  " + producto.getPvp() + "€   X" + cantidad + "  ----  " + df.format(cantidad*producto.getPvp()) + "€";
     }
 
    
@@ -60,7 +79,7 @@ public class Linea {
             return false;
         }
         final Linea other = (Linea) obj;
-        if (this.idVenta != other.idVenta && !Objects.equals(this.producto, other.producto)) {
+        if (this.idVenta != other.idVenta || !Objects.equals(this.producto, other.producto)) {
             return false;
         }
        
