@@ -27,7 +27,7 @@ public class ClienteQR {
     public static void main(String[] args) {
 
         try {
-            Socket socketCliente = new Socket(InetAddress.getByName("localhost"), 5555);
+            Socket socketCliente = new Socket(InetAddress.getByName("192.168.1.103"), 5555);
             DataOutputStream salida = new DataOutputStream(socketCliente.getOutputStream());
             salida.writeUTF("122122");
             

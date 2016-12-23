@@ -68,6 +68,7 @@ public class HiloQR extends Thread {
 
             while (escuchar) {
 
+                System.out.println("Puerto escuchando en " + socketServidor.getInetAddress().getHostAddress() + ":" + socketServidor.getLocalPort());
                 clienteConectado = socketServidor.accept();
 
                 //INSTANCIAMOS LOS STREAMS
@@ -76,7 +77,7 @@ public class HiloQR extends Thread {
                 //RECIBIMOS EL CÓDIGO
                 cadenaQR = entrada.readUTF();
                 
-                System.err.println(cadenaQR);
+                System.out.println(cadenaQR);
 
                 entrada.close();
                 clienteConectado.close();
