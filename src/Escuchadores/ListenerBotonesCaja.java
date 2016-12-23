@@ -67,15 +67,14 @@ public class ListenerBotonesCaja implements ActionListener {
         modeloLineasCaja = new DefaultListModel<>();
         listaL.setModel(modeloLineasCaja);
 
-        hiloQR = new HiloQR(lb);
-        hiloQR.start();
+        iniciarHiloQR(lb,textIdArticulo);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        String action = e.getActionCommand().toString();
-        String n = textIdArticulo.getText().toString();
+        String action = e.getActionCommand();
+        String n = textIdArticulo.getText();
 
         switch (action) {
 
@@ -92,7 +91,7 @@ public class ListenerBotonesCaja implements ActionListener {
 
             case "intro":
 
-                int cant = ((Integer) cantidadCaja.getValue()).intValue();
+                int cant = ((Integer) cantidadCaja.getValue());
                 Linea l = new Linea(p, cant);
 
                 if (!modeloLineasCaja.contains(l)) {
@@ -119,33 +118,40 @@ public class ListenerBotonesCaja implements ActionListener {
             default:
                 if (textIdArticulo.getText().length() <= 9) {
 
-                    textIdArticulo.setText(textIdArticulo.getText() + e.getActionCommand().toString());
+                    textIdArticulo.setText(textIdArticulo.getText() + e.getActionCommand());
                 }
                 break;
-
         }
 
-        if (!textIdArticulo.getText().toString().equals("")) {
-            p = g1.pedirProductoBBDD(Integer.parseInt(textIdArticulo.getText().toString()), "mysql");
+        buscarRellenarProducto();
+        
+
+    }
+    
+    public void buscarRellenarProducto(){
+        
+        System.err.println("ENTRA EL METODITO");
+        if (!textIdArticulo.getText().equals("")) {
+            p = g1.pedirProductoBBDD(Integer.parseInt(textIdArticulo.getText()), "mysql");
+            
             if (p != null) {
                 rellenarFormularioProducto(p);
                 botonIntroCaja.setEnabled(true);
                 cantidadCaja.setEnabled(true);
-                hiloQR.setCadenaQR(String.valueOf(p.getId()));
-                hiloQR.generarQR();
-            } else {
+            } 
+            else {
                 botonIntroCaja.setEnabled(false);
                 cantidadCaja.setEnabled(false);
                 resetearFormulario();
 
-                if (modeloLineasCaja.isEmpty()) {
+                if (modeloLineasCaja.isEmpty()) 
                     botonComprar.setEnabled(false);
-                } else {
-                    botonComprar.setEnabled(true);
-                }
+                else 
+                    botonComprar.setEnabled(true); 
             }
         }
-
+        
+        
     }
 
     public void rellenarFormularioProducto(Producto p) {
@@ -184,6 +190,11 @@ public class ListenerBotonesCaja implements ActionListener {
         mostrarPanelInfo("COMPRA REALIZADA CON EXITO");
         modeloLineasCaja.clear();
         botonComprar.setEnabled(false);
+    }
+    
+    public void iniciarHiloQR(JLabel lb, JTextField id){
+        hiloQR = new HiloQR(lb,id,this);
+        hiloQR.start();
     }
 
     public void mostrarPanelError(String msg) {

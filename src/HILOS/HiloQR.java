@@ -5,6 +5,7 @@
  */
 package HILOS;
 
+import Escuchadores.ListenerBotonesCaja;
 import com.barcodelib.barcode.QRCode;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -12,12 +13,11 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
  *
@@ -31,18 +31,22 @@ public class HiloQR extends Thread {
     private String cadenaQR;
     private boolean escuchar;
     private JLabel labelQR;
+    private JTextField textIdP;
+    private ListenerBotonesCaja lbt;
     
     
     //VALORES CODIGO QR
     int udm, resol, rot;
     float mi,md,ms,min,tam;
 
-    public HiloQR(JLabel lb) {
+    public HiloQR(JLabel lb, JTextField id, ListenerBotonesCaja lbt) {
         try {
             socketServidor = new ServerSocket(5555);
             escuchar = true;
             
             this.labelQR = lb;
+            this.textIdP = id;
+            this.lbt = lbt;
             
             udm = 0;
             resol = 72;
@@ -108,7 +112,10 @@ public class HiloQR extends Thread {
         
         
         pintarCodigoQR(cod);
+        textIdP.setText(cadenaQR);
         
+        lbt.buscarRellenarProducto();
+          
     }
     
     public void pintarCodigoQR(QRCode codigo){

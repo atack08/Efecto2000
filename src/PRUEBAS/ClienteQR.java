@@ -29,7 +29,7 @@ public class ClienteQR {
         try {
             Socket socketCliente = new Socket(InetAddress.getByName("localhost"), 5555);
             DataOutputStream salida = new DataOutputStream(socketCliente.getOutputStream());
-            salida.writeUTF("mielda pa ti");
+            salida.writeUTF("122122");
             
             salida.close();
             socketCliente.close();
