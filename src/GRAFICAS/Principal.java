@@ -6,7 +6,7 @@ import BEANS.Linea;
 import BEANS.Producto;
 import BEANS.Venta;
 import DAOS.GestorBBDD;
-import Escuchadores.ListenerBotonesCaja;
+import ESCUCHADORES.ListenerBotonesCaja;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
