@@ -5,6 +5,7 @@
  */
 package HILOS;
 
+
 import ESCUCHADORES.ListenerBotonesCaja;
 import com.barcodelib.barcode.QRCode;
 import java.awt.Image;

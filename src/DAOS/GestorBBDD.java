@@ -78,6 +78,8 @@ public class GestorBBDD {
     private final String comprobarStockMinimo = "select (stockactual - stockminimo)from productos where id = ?";
     private final String consultaPedirTodasVentas = "select idventa,fechaventa,cliente,total from ventas";
     private final String consultaTodasLineasVenta = "select idproducto,cantidad from lineas where idventa=?";
+    private final String consultaClientesConVentas = "select DISTINCT cliente from ventas";
+    private final String consultaTotalVentasCliente = "select SUM(DISTINCT total) from ventas where cliente = ?";
     
     //LLAMADAS A PROCEDIMIENTOS  Y FUNCIONES ALMACENADOS
     private final String llamadaProcedimientoInsertarVenta = "{call insertarVenta (?,?,?)}";
@@ -1265,6 +1267,64 @@ public class GestorBBDD {
         
         h1.resetearBarra();
     }
+    
+    //MÉTODOS PARA LA VENTANA DE ESTADÍSTICAS
+    
+    //MÉTODO QUE DEVUELVE UN HASHMAP CON EL PAR NIF - TOTAL VENTAS DE CADA CLIENTE CON VENTAS
+    public HashMap<String,Float> mapaClientesVentas(){
+        
+        HashMap<String, Float> mapaCV =  new HashMap<>();
+        try {
+            
+            Connection cn = conexionMysql();
+            
+            ArrayList<String> listaCV =  pedirListaClientesConVentas(cn);
+            preparedBusquedaObjeto = cn.prepareStatement(consultaTotalVentasCliente);
+            ResultSet rs=null;
+            
+            for(String nif: listaCV){
+                preparedBusquedaObjeto.setString(1, nif);
+                rs = preparedBusquedaObjeto.executeQuery();
+                rs.next();
+                Float total = rs.getFloat(1);
+                
+                mapaCV.put(nif, total);
+                System.out.println("Cliente: " + nif + " - total: " + total);
+            }
+            
+            rs.close();
+            preparedBusquedaObjeto.close();
+            cn.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorBBDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return mapaCV;
+    }
+    
+    
+    //MÉTODO QUE DEVUELVE UN ARRAYLIST CON LOS CLIENTES QUE TIENEN VENTAS
+    public ArrayList<String> pedirListaClientesConVentas(Connection cn){
+        ArrayList<String> listaCV =  new ArrayList<>();
+        try {
+ 
+            preparedBusquedaObjeto = cn.prepareStatement(consultaClientesConVentas);
+            ResultSet rs = preparedBusquedaObjeto.executeQuery();
+            while(rs.next()){
+                listaCV.add(rs.getString(1));
+            }
+            
+            rs.close();
+            preparedBusquedaObjeto.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorBBDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listaCV;
+    }
+    
+    
+    
     
     //MÉTODO PARA MOSTRAR INFORMACIÓN EN LA PANTALLA
     public void mostrarPanelError(String msg) {
