@@ -1209,14 +1209,26 @@ public class Principal extends javax.swing.JFrame{
 
         jTabbedPane1.addTab("Gestión BBDD", panelTabBBDD);
 
-        jButton6.setText("VENTAS - PRODUCTO");
+        jButton4.setText("STOCK - PRODUCTO");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("VENTAS - CLIENTE");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
 
-        jButton7.setText("VENTAS - CLIENTE");
+        jButton7.setText("VENTAS - PRODUCTO");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelTabEstadisticasLayout = new javax.swing.GroupLayout(panelTabEstadisticas);
         panelTabEstadisticas.setLayout(panelTabEstadisticasLayout);
@@ -2350,6 +2362,20 @@ public class Principal extends javax.swing.JFrame{
         
         
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+       
+        Estadisticas chart = new Estadisticas("Estadísticas", "Ventas / Producto", gestor1, 2);
+        RefineryUtilities.centerFrameOnScreen(chart);
+  
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        
+        Estadisticas chart = new Estadisticas("Estadísticas", "Stocks / Producto", gestor1, 3);
+        RefineryUtilities.centerFrameOnScreen(chart);
+        
+    }//GEN-LAST:event_jButton4ActionPerformed
 
    //MÉTODO QUE CAMBIA EL TITULO DEL PANES SCROLL DE LA LISTA DE OBJETOS
     public void cambiarTituloLista(String titulo){

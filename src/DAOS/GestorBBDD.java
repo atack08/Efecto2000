@@ -80,6 +80,9 @@ public class GestorBBDD {
     private final String consultaTodasLineasVenta = "select idproducto,cantidad from lineas where idventa=?";
     private final String consultaClientesConVentas = "select DISTINCT cliente from ventas";
     private final String consultaTotalVentasCliente = "select SUM(DISTINCT total) from ventas where cliente = ?";
+    private final String consultaProductosVendidos =  "select DISTINCT idproducto, descripcion from lineas,productos where id=idproducto";
+    private final String consultaTotalVentasProductos = "select sum(distinct cantidad) from lineas where idproducto = ?";
+    private final String consultaProductosStocks = "select descripcion,stockactual,stockminimo from productos";
     
     //LLAMADAS A PROCEDIMIENTOS  Y FUNCIONES ALMACENADOS
     private final String llamadaProcedimientoInsertarVenta = "{call insertarVenta (?,?,?)}";
@@ -1289,7 +1292,6 @@ public class GestorBBDD {
                 Float total = rs.getFloat(1);
                 
                 mapaCV.put(nif, total);
-                System.out.println("Cliente: " + nif + " - total: " + total);
             }
             
             rs.close();
@@ -1323,8 +1325,94 @@ public class GestorBBDD {
         return listaCV;
     }
     
+    //MÉTODO QUE DEVUELVE UN HASHMAP CON LOS PARES DESCRIPCION-CANTIDAD VENTAS 
+    public HashMap<String,Integer> pedirMapaTotalVentasProducto(){
+        
+        HashMap<String, Integer> mapaPTV = new HashMap<>();
+        
+        try {
+            Connection cn = conexionMysql();
+            HashMap <Integer, String> mapaPV =  pedirMapaProductosVendidos(cn);
+            preparedBusquedaObjeto = cn.prepareStatement(consultaTotalVentasProductos);
+            
+            Iterator<Integer> it = mapaPV.keySet().iterator();
+            ResultSet rs = null;
+            
+            while (it.hasNext()) {
+                Integer idProducto = it.next();
+                String desc = (String)mapaPV.get(idProducto);
+                preparedBusquedaObjeto.setInt(1, idProducto);
+                rs = preparedBusquedaObjeto.executeQuery();
+                rs.next();
+                int cantidad = rs.getInt(1);
+                
+                mapaPTV.put(desc, cantidad);
+                
+            }
+   
+            rs.close();
+            preparedBusquedaObjeto.close();
+            cn.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorBBDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
     
+        return mapaPTV;     
+    }
     
+    //MÉTODO QUE DEVUELVE UN HASHMAP CON LOS PARES ID-DESCRIPCION DE LOS PRODUCTOS QUE HAN SIDO VENDIDOS
+    public HashMap<Integer,String> pedirMapaProductosVendidos( Connection cn){
+        
+        HashMap<Integer, String> mapaPV = new HashMap<>();
+        
+        try {
+ 
+            preparedBusquedaObjeto = cn.prepareStatement(consultaProductosVendidos);
+            ResultSet rs = preparedBusquedaObjeto.executeQuery();
+            while(rs.next()){
+                mapaPV.put(rs.getInt(1), rs.getString(2));
+            }
+            
+            rs.close();
+            preparedBusquedaObjeto.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorBBDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+ 
+        return mapaPV;
+    }
+    
+    //MÉTODO QUE DEVUELVE UNA LISTA CON LA DESCRIPCIÓN Y LOS STOCKS DE TODOS LOS PRODUCTOS
+    public HashMap<String, Integer[]> pedirMapaDescStocksProductos(){
+        
+        HashMap<String, Integer[]> mapaPS = new HashMap<>();
+        
+        try {
+            Connection cn = conexionMysql();
+            preparedBusquedaObjeto = cn.prepareStatement(consultaProductosStocks);
+            ResultSet rs = preparedBusquedaObjeto.executeQuery();
+            while(rs.next()){
+                String desc = rs.getString(1);
+                Integer[] stocks = new Integer[2];
+                stocks[0] = rs.getInt(2);
+                stocks[1] =  rs.getInt(3);
+                
+                mapaPS.put(desc, stocks);
+            }
+            
+            rs.close();
+            preparedBusquedaObjeto.close();
+            cn.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorBBDD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+ 
+        return mapaPS;
+        
+    }
     
     //MÉTODO PARA MOSTRAR INFORMACIÓN EN LA PANTALLA
     public void mostrarPanelError(String msg) {
