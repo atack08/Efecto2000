@@ -1,0 +1,383 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+
+
+<title>Barcode for Java Developer Guide</title>
+
+	
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="SHORTCUT ICON" href="files/favicon.ico">
+<link href="files/bl_style.css" rel="stylesheet" type="text/css">
+<meta name="google-site-verification" content="a71_5Ku9ZXEpo0n2l06NmP48cxl3vKm9GnLF1jkm0-E" />
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write("\<script src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'>\<\/script>" );
+</script>
+
+<script>
+startList = function() {
+// Required update: if the page has no primary nav, don't do anything, don't give an error.
+  if (document.all&&document.getElementById) {
+    navRoot = document.getElementById("primarynav");
+    if (navRoot) {
+      for (i=0; i<navRoot.childNodes.length; i++) {
+        node = navRoot.childNodes[i];
+        if (node.nodeName=="LI") {
+          node.onmouseover=function() {
+            this.className+=" over";
+          }
+          node.onmouseout=function() {
+            this.className=this.className.replace(" over", "");
+          }
+} } } } }
+</script>
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-1366179-9']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();
+</script>
+
+<script type="text/javascript">
+
+function clickGO(){
+	document.getElementById("bl_lineartypes").href=document.getElementById("bl_chooselineartypes").value;
+	document.getElementById("bl_matrixtypes").href=document.getElementById("bl_choosematrixtypes").value;
+}
+</script>
+
+</head><body>
+<table class="bl_homepage_area" cellpadding="0" cellspacing="0"><tr><td width="4px" /><td class="bl_homepage_area_top" /><td width="4px" /></tr><tr><td class="bl_homepage_area_left" /><td class="bl_homepage_area_content1">
+	 
+	<div class="bl_homepage_header">
+		<a href="http://www.barcodelib.com/"><img src="files/bl_logo.jpg" width="308" height="77" border="0" alt=""></a>
+		<div class="bl_homepage_menu">
+		<a href="http://www.barcodelib.com" id="top" rel="nofollow">HOME</a>
+		<a href="http://www.barcodelib.com/purchase/main.html" rel="nofollow">PURCHASE</a>
+		<a href="http://www.barcodelib.com/sitemap/main.html" rel="nofollow">SITEMAP</a>
+		<a href="http://www.barcodelib.com/home/about_us.html" rel="nofollow" style="border:none; padding-right:0px;">COMPANY</a>
+		</div>
+		<div class="pHMenuInnerWrap" id="primary-nav">		
+			<ul id="primary-nav" class=l1>
+			<li style="width: 165px;"><a class="menuItemLink" href="http://www.barcodelib.com/java_barcode/main.html" title="Java Barcode">Barcode for Java</a></li>
+			<li style="width: 185px;">
+				<a class="menuItemLink2" href="http://www.barcodelib.com/net_barcode/main.html" title=".NET Barcode">Barcode for .NET</a>
+				<ul class=l2>
+					<li>
+					<table width="500px" cellpadding="0" cellspacing="0">
+					<tr>
+						<td class="bl_top_menu_title" width="240px">.NET Programing Control</td>
+						<td class="bl_top_menu_title" width="260px">.NET Reporting Control</td>
+					</tr>
+					<tr>
+						<td class="bl_top_menu_link" valign="top">
+							<a href="http://www.barcodelib.com/asp_net/main.html">Barcode for ASP.NET</a>
+							<a href="http://www.barcodelib.com/net_winforms/main.html">Barcode for .NET WinForms</a>
+						</td>
+						<td class="bl_top_menu_link" valign="top">
+							<a href="http://www.barcodelib.com/net_reporting_services/main.html">Barcode for Reporting Services</a>
+							<a href="http://www.barcodelib.com/net_crystal_reports/main.html">Barcode for Crystal Reports</a>
+							<a href="http://www.barcodelib.com/net_rdlc_reports/main.html">Barcode for RDLC Reports</a>
+						</td>
+					</tr>
+					<tr>
+						<td class="bl_top_menu_download" colspan="2"><a href="http://www.barcodelib.com/net_barcode/file_download.php" title="Download C#, .NET, VB.NET Barcode Generator" rel="nofollow" onClick="javascript: _gaq.push(['_trackPageview', '/net_barcode/file_download.php']);">Download Free Trial <span>for .NET</span></a></td>
+					</tr>
+					</table>
+					</li>
+				</ul>
+			</li>
+			<li style="width: 225px;"><a class="menuItemLink" href="http://www.barcodelib.com/net_barcode_reader/main.html" title=".NET Barcode Reader">Barcode Reader for .NET</a></li>
+			<li style="width: 145px;"><a class="menuItemLink" href="http://www.barcodelib.com/barcode_fonts/barcode-fonts.html" title="Barcode Fonts">Barcode Fonts</a></li>
+			<li style="width: 175px;"><a class="menuItemLink" href="http://www.barcodelib.com/barcode_software/main.html" title="Barcode Generator Software">Barcode Generator</a></li>
+			<li style="width: 95px;"><a class="menuItemLink2" style="background-position:80px 13px;"  href="http://www.barcodelib.com/purchase/main.html" title="Purchase BarcodeLib.com Licenses" rel="nofollow">Purchase</a>
+			<ul class=l2 style="left: -135px; top: 36px; background-position:163px 0px;">
+					<li style="width: 250px;">
+					<table width="250px" cellpadding="0" cellspacing="0">
+					<tr>
+						<td class="bl_top_menu_title" width="250px">Purchase FAQs & Support</td>
+					</tr>
+					<tr>
+						<td class="bl_top_menu_link" valign="top">
+							<a href="http://www.barcodelib.com/license-agreement.html" rel="nofollow">Software License Agreement</a>
+							<a href="http://www.barcodelib.com/return_policy/main.html" rel="nofollow">Software Return Policy</a>
+							<a href="http://www.barcodelib.com/purchase/po_and_wire_transfers.html" rel="nofollow">Purchase Order & Wire Transfers</a>
+						</td>	
+					</tr>
+					</table>
+					</li>
+				</ul>
+			</li>
+			</ul>
+		</div>
+	</div>
+	 
+<table class="bl_page_content" cellpadding="0" cellspacing="0"><tr><td class="bl_page_content_left">
+
+
+
+
+	<!-- page-LeftMenu-start -->
+    <div class="bl_page_quickjumps">
+		<div class="bl_page_quickjump_s">Developer Guide</div>
+		<a class="bl_page_quickjump_lower" href="files/java_barcode_eclipse_birt.html">for Eclipse BIRT</a>
+		<a class="bl_page_quickjump_lower" href="files/barcode_ireport.html">for iReport</a>
+		<a class="bl_page_quickjump_lower" href="files/barcode_jasper_reports.html">for Jasper Reports</a>
+        <a class="bl_page_quickjump" href="Purchase-Barcode for Java.html">Licenses & Prices</a>
+	</div>
+	<div class="bl_page_testimonial"><img src="files/t1.gif" width="230" height="334" border="0" alt=""/></div>
+	<!-- page-LeftMenu-end -->
+
+
+
+
+	<div class="bl_page_partners">
+		Our Customers
+		<img src="files/bl_customer_gif.gif" width="181" height="122" border="0" alt="" style="margin-top:20px;" /></div><div class="bl_page_contact"><span>Contact Us</span>
+		Email:
+		<a href="mailto:support@barcodelib.com">support@barcodelib.com</a>
+	</div>
+	
+</td><td class="bl_page_content_right">
+	
+	<div class="bl_thumbnail">
+	<!-- page-thumb-start -->
+	<!-- page-thumb-end -->
+	</div>
+
+	
+
+
+
+	<h1>Barcode for Java Developer Guide</h1>
+	<br/><br/>
+
+
+	<div class="bl_paragraph">Quick Navigate:
+	<ul class="bl_unorderlist">
+			<li><a href="#overview" class=display>Package Overview</a></li>
+			<li><a href="#install" class=display>Install Java Barcode Library</a></li>
+			<li><a href="#howtoclass" class=display>How to Generate Barcode in <b>Java Class</b></a>
+			<li><a href="#howtoweb" class=display>How to Generate Barcode in <b>Java Web Application</b></a>
+			<li><a href="#howtoreporting" class=display>How to Generate Barcode in <b>Java Reporting</b></a>
+			<li><a href="#settings" class=display><b>Property Settings</b> for Each Barcode Type</a></li>
+	</ul>
+	</div>
+	
+	
+
+
+
+	<div class="bl_sectitle" id="overview">Barcode for Java Trial Package Overview<a href="#top"><img src="files/bl_back2top.jpg" width="78" height="16" border="0" alt="" /></a>
+	</div>
+		
+	<div class="bl_paragraph">Barcode for Java trial package includes:
+		 <ul class="bl_unorderlist">
+		 	<li><b>barcode.jar</b>, Java library includes all supporting barcode types and functions for barcode generation in Java class, Java web application, Jasper Reports, iReport, & Eclipse BIRT.</li>
+			<li><b>DeveloperGuide.html</b>, guide for developers to use this library.</li>
+			<li>/<b>barcode</b>, contains Barcode for Java Buildin Barcode Generation web application for developers.</li>
+			<li>/<b>javadoc</b>, contains Barcode for Java API.</li>
+			<li>/<b>demo-src</b>, complete source code for the demo application.</li>
+			<li><b>LicenseAgreement.pdf</b>, Barcode for Java End-User License Agreement.</li>
+	     </ul>   
+     </div>
+
+
+
+
+
+     <div class="bl_sectitle" id="install">Install Java Barcode Library<a href="#top"><img src="files/bl_back2top.jpg" width="78" height="16" border="0" alt="" /></a>
+	 </div>
+	
+	 <div class="bl_paragraph"><b>Install Barcode Servlet Web Application</b>
+		  <ul class="bl_unorderlist">
+		 	  <li>Add <b>barcode.jar</b> to your Java project classpath or your project library.</li>
+	      </ul>   
+     </div>
+
+	 <div class="bl_paragraph" id="installweb"><b>Install Barcode Servlet Web Application</b>
+		  <ul class="bl_unorderlist">
+		 	<li>Copy <b>barcode</b> folder in downloaded trial pacakge to your java servlet container like tomcat.</li>
+		   	<li>Restart Tomcat.</li>
+			<li>To test your installation, open your web browser, and navigate to: 
+				<br/><b>http://localhost:8080/barcode/linear?Data=123456789&Type=CODE39</b>
+				<br/>
+			You will see a Code39 image displayed in the browser.</li>
+			<li>To create barcode image in your JSP or html page, you can pass the url to IMG tag src value. 
+		   For example, <br/>
+		   <span class="content_highlight"><b>&lt;img src="http://localhost:8080/barcode/linear?Data=123456789&Type=CODE39" /></b></a></li>
+	      </ul>   
+     </div>
+
+
+
+
+
+     <div class="bl_sectitle" id="howtoclass">How to Generate Barcode in Java Class<a href="#top"><img src="files/bl_back2top.jpg" width="78" height="16" border="0" alt="" /></a>
+	 </div>
+	
+	 <div class="bl_paragraph">The following code illustrates how to create a barcode in a Java class.<br/><br/>
+	 <div class="java5"><ol><li class="li1"><div class="de1">Linear barcode = <span class="kw2">new</span> Linear<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">barcode.<span class="me1">setType</span><span class="br0">(</span>Linear.<span class="me1">CODE39</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1"><span class="co1">// barcode data to encode</span></div></li>
+<li class="li1"><div class="de1">barcode.<span class="me1">setData</span><span class="br0">(</span><span class="st0">"CODE39-123456789012"</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li2"><div class="de2">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="co1">// wide bar width vs narrow bar width ratio</span></div></li>
+<li class="li1"><div class="de1">barcode.<span class="me1">setN</span><span class="br0">(</span>3.0f<span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1">barcode.<span class="me1">renderBarcode</span><span class="br0">(</span><span class="st0">"c://code39.gif"</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+</ol></div>
+    </div>
+
+
+
+
+
+
+
+     <div class="bl_sectitle" id="howtoweb">How to Generate Barcode in Java Web Application<a href="#top"><img src="files/bl_back2top.jpg" width="78" height="16" border="0" alt="" /></a>
+	 </div>
+	
+     <div class="bl_paragraph">There are two ways to create barcode images in your Java web applications.
+
+     <ol class="bl_orderlist">
+		
+		<li>This is the simplest way to stream barcode image using our provided barcode web application, under folder "<b>barcode</b>".<br/>And it will <b>not save barcode images</b> in your server side.</li>
+		<ul class="bl_unorderlist">
+		<li><a href="#installweb" class=display>Install barcode Servlet web application</a> to your Servlet container, such as Tomcat, Jboss.</li>
+		<li>To create barcode images in your JSP or html pages, you can pass the url to IMG tag src value. 
+				<br/>
+			   For Linear barcode: <span class="content_highlight"><b>&lt;img src="http://localhost:8080/barcode/linear?Data=123456789&Type=CODE39" /></b></a>
+			   	<br/>
+			   For Data Matrix: <span class="content_highlight"><b>&lt;img src="http://localhost:8080/barcode/datamatrix?Data=123456789" /></b></a>
+			   	<br/>
+			   For PDF417: <span class="content_highlight"><b>&lt;img src="http://localhost:8080/barcode/pdf417?Data=123456789" /></b></a>
+			   	<br/>
+			   For QR Code: <span class="content_highlight"><b>&lt;img src="http://localhost:8080/barcode/qrcode?Data=123456789" /></b></a>
+	     </li>
+	     </ul>
+
+		 <li>The second method is similar with the way to generate barcode in Java applications.</li>
+		<ul class="bl_unorderlist">
+		<li>To create barcodes in your Java server side class, <a href="#howtoclass" class=display>view the above example</a>.</li>
+		<li>To output barcode image to Java Servlet HttpServletResponse object:</li>
+	     </ul>
+	</ol>
+
+	 <div class="java5"><ol><li class="li1"><div class="de1"><span class="kw2">public</span> <span class="kw3">void</span> doGet<span class="br0">(</span>HttpServletRequest request, HttpServletResponse response<span class="br0">)</span> <span class="kw2">throws</span> ServletException</div></li>
+<li class="li1"><div class="de1"><span class="br0">{</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw2">try</span> <span class="br0">{</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; Linear barcode = <span class="kw2">new</span> Linear<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li2"><div class="de2">&nbsp; &nbsp; &nbsp; &nbsp; barcode.<span class="me1">setType</span><span class="br0">(</span>Linear.<span class="me1">CODE39</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; barcode.<span class="me1">setData</span><span class="br0">(</span><span class="st0">"CODE39-123456789012"</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; </div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; response.<span class="me1">setContentType</span><span class="br0">(</span><span class="st0">"image/gif"</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; ServletOutputStream servletoutputstream = response.<span class="me1">getOutputStream</span><span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li2"><div class="de2">&nbsp;</div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; linear.<span class="me1">renderBarcode</span><span class="br0">(</span>servletoutputstream<span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">}</span> <span class="kw2">catch</span> <span class="br0">(</span><a href="http://java.sun.com/j2se/1%2E5%2E0/docs/api/java/lang/Exception.html"><span class="kw21">Exception</span></a> e<span class="br0">)</span> <span class="br0">{</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">throw</span> <span class="kw2">new</span> ServletException<span class="br0">(</span>e<span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li2"><div class="de2">&nbsp; &nbsp; <span class="br0">}</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+</ol>
+</div>
+</div>
+
+
+
+
+
+
+
+
+        <div class="bl_sectitle" id="howtoreporting">How to Generate Barcode in Java Reporting<a href="#top"><img src="files/bl_back2top.jpg" width="78" height="16" border="0" alt="" /></a>
+	</div>
+		
+	<div class="bl_paragraph">Barcode for Java trial package includes:
+		 <ul class="bl_unorderlist">
+		 	<li><a href="files/barcode_jasper_reports.html" class=display>How to generate barcode in <b>Jasper Reports</b> using Java Barcode library?</a></li>
+			<li><a href="files/barcode_ireport.html" class=display>How to generate barcode in <b>iReport</b> using Java Barcode library?</a></li>
+			<li><a href="files/java_barcode_eclipse_birt.html" class=display>How to generate barcode in <b>Eclipse BIRT</b> using Java Barcode library?</a></li>
+	     </ul>   
+     </div>
+
+
+
+
+
+
+
+
+
+
+     <div class="bl_sectitle" id="settings">Property Settings for Each Barcode Type<a href="#top"><img src="files/bl_back2top.jpg" width="78" height="16" border="0" alt="" /></a>
+	 </div>
+
+	 <div class="bl_paragraph"><i>Please choose your target barcode type and click button "<b>Go</b>" to see details.</i>
+	 </div>
+
+     <div class="bl_selectbarcode">
+            <div class="bl_barcodetypes">
+					Linear (1D) Barcodes:
+					<select id="bl_chooselineartypes" class="bl_types">
+						<option value="files/codabar.html" selected>Codabar</option>
+						<option value="files/code2of5.html">Code 2 of 5</option>
+						<option value="files/code11.html">Code 11</option>
+						<option value="files/code39.html">Code 39</option>
+						<option value="files/code93.html">Code 93</option>
+						<option value="files/code128.html">Code 128</option>
+						<option value="files/ean8.html">EAN-8</option>
+						<option value="files/ean13.html">EAN-13</option>
+						<option value="files/ean128.html">EAN-128/GS1-128</option>
+						<option value="files/interleaved25.html">Interleaved 2 of 5</option>
+						<option value="files/itf14.html">ITF-14</option>
+						<option value="files/msi.html">MSI Plessey</option>
+						<option value="files/onecode.html">Intelligent Mail (Onecode)</option>
+						<option value="files/planet.html">PLANET</option>
+						<option value="files/postnet.html">POSTNET</option>
+						<option value="files/rm4scc.html">RM4SCC</option>
+						<option value="files/upca.html">UPC-A</option>
+						<option value="files/upce.html">UPC-E</option>
+					</select>
+			</div>
+			<a id="bl_lineartypes" onclick="clickGO()" href=""><img src="files/bl_go.jpg" width="41" height="23" border="0" alt=""/></a>
+					
+			<div class="bl_barcodetypes">
+					Matrix (2D) Barcodes:
+					<select id="bl_choosematrixtypes" class="bl_types">
+						<option value="files/qrcode.html" selected>QR Code</option>
+						<option value="files/pdf417.html">PDF-417</option>
+						<option value="files/data_matrix.html">Data Matrix</option>
+					</select>
+			</div>
+            <a id="bl_matrixtypes" onclick="clickGO()" href=""><img src="files/bl_go.jpg" width="41" height="23" border="0" alt=""/></a>
+	</div>
+    <br/><br/>
+
+
+
+
+
+
+
+</td></tr></table></td><td class="bl_homepage_area_right" /></tr><tr><td /><td class="bl_homepage_area_bottom" /><td /></tr></table>
+	 
+
+
+
+<div class="bl_homepage_copyright">
+	Copyright &copy; 2013 BarcodeLib.com. All rights reserved. 
+</div>
+			
+	 
+	 
+</body></html>
+
+
+

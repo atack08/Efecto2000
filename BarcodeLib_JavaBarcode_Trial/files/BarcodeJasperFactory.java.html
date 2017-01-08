@@ -1,0 +1,287 @@
+<HTML>
+<HEAD>
+<TITLE>C:\Projects\Barcode\src\com\barcodelib\barcode\BarcodeJasperFactory.java</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="KEYWORDS" CONTENT="IntelliJ_IDEA_Html">
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+C:\Projects\Barcode\src\com\barcodelib\barcode\BarcodeJasperFactory.java</FONT>
+</center></TD></TR></TABLE>
+<PRE>
+
+<FONT style="font-family:monospaced;" COLOR="#000080"><B>package</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> com.barcodelib.barcode; 
+ 
+</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>class</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> BarcodeJasperFactory { 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createLinear(</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> type, String data) 
+    { 
+        Linear barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> Linear(); 
+        barcode.setData(data); 
+        barcode.setType(type); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createLinear(</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> type, String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>boolean</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> addCheckSum) 
+    { 
+        Linear barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> Linear(); 
+        barcode.setData(data); 
+        barcode.setType(type); 
+        barcode.setAddCheckSum(addCheckSum); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createLinear(</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> type, String data, String sData) 
+    { 
+        Linear barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> Linear(); 
+        barcode.setData(data); 
+        barcode.setType(type); 
+        barcode.setSData(sData); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createLinear(</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> type, String data, String sData, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>boolean</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> addCheckSum) 
+    { 
+        Linear barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> Linear(); 
+        barcode.setData(data); 
+        barcode.setType(type); 
+        barcode.setSData(sData); 
+        barcode.setAddCheckSum(addCheckSum); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+     
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createLinear(</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> type, String data, String sData, 
+                                       </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> X, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> Y, 
+                                       </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> leftMargin, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> rightMargin, 
+                                       </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> topMargin, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> bottomMargin, 
+                                       </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> resolution, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>boolean</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> showText, 
+                                       </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>boolean</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> addCheckSum) 
+    { 
+        Linear barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> Linear(); 
+        barcode.setData(data); 
+        barcode.setType(type); 
+        barcode.setSData(sData); 
+        barcode.setY(Y); 
+        barcode.setX(X); 
+        barcode.setLeftMargin(leftMargin); 
+        barcode.setRightMargin(rightMargin); 
+        barcode.setTopMargin(topMargin); 
+        barcode.setBottomMargin(bottomMargin); 
+        barcode.setResolution(resolution); 
+        barcode.setShowText(showText); 
+        barcode.setAddCheckSum(addCheckSum); 
+ 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createDataMatrix(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> format) 
+    { 
+        DataMatrix barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> DataMatrix(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setFormatMode(format); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createDataMatrix(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> format, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> moduleSize) 
+    { 
+        DataMatrix barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> DataMatrix(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setFormatMode(format); 
+        barcode.setModuleSize(moduleSize); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createDataMatrix(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> format, 
+                               </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> resolution, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> moduleSize, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>boolean</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> processTilde, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> margin) 
+    { 
+        DataMatrix barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> DataMatrix(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setFormatMode(format); 
+        barcode.setResolution(resolution); 
+        barcode.setModuleSize(moduleSize); 
+        barcode.setProcessTilde(processTilde); 
+        barcode.setLeftMargin(margin); 
+        barcode.setRightMargin(margin); 
+        barcode.setTopMargin(margin); 
+        barcode.setBottomMargin(margin); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+ 
+ 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createPDF417(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode) 
+    { 
+        PDF417 barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> PDF417(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createPDF417(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> rowCount, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> columnCount, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> X, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barRatio, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> leftMargin, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> rightMargin, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> topMargin, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> bottomMargin) 
+    { 
+        PDF417 barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> PDF417(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setRowCount(rowCount); 
+        barcode.setColumnCount(columnCount); 
+        barcode.setX(X); 
+        barcode.setBarRatio(barRatio); 
+        barcode.setLeftMargin(leftMargin); 
+        barcode.setRightMargin(rightMargin); 
+        barcode.setTopMargin(topMargin); 
+        barcode.setBottomMargin(bottomMargin); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createPDF417(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> rowCount, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> columnCount, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> X, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barRatio, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> leftMargin, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> rightMargin, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> topMargin, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> bottomMargin, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> ecl, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>boolean</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> truncated) 
+    { 
+        PDF417 barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> PDF417(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setRowCount(rowCount); 
+        barcode.setColumnCount(columnCount); 
+        barcode.setX(X); 
+        barcode.setBarRatio(barRatio); 
+        barcode.setLeftMargin(leftMargin); 
+        barcode.setRightMargin(rightMargin); 
+        barcode.setTopMargin(topMargin); 
+        barcode.setBottomMargin(bottomMargin); 
+        barcode.setEcl(ecl); 
+        barcode.setTruncated(truncated); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createPDF417(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> rowCount, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> columnCount, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> X, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barRatio, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> leftMargin, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> rightMargin, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> topMargin, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> bottomMargin, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> ecl, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>boolean</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> truncated, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>boolean</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> isMacro, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> macroFileIndex, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> macroSegmentIndex, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> macroSegmentCount) 
+    { 
+        PDF417 barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> PDF417(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setRowCount(rowCount); 
+        barcode.setColumnCount(columnCount); 
+        barcode.setX(X); 
+        barcode.setBarRatio(barRatio); 
+        barcode.setLeftMargin(leftMargin); 
+        barcode.setRightMargin(rightMargin); 
+        barcode.setTopMargin(topMargin); 
+        barcode.setBottomMargin(bottomMargin); 
+        barcode.setEcl(ecl); 
+        barcode.setTruncated(truncated); 
+        barcode.setMacro(isMacro); 
+        barcode.setMacroFileIndex(macroFileIndex); 
+        barcode.setMacroSegmentIndex(macroSegmentIndex); 
+        barcode.setMacroSegmentCount(macroSegmentCount); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createQRCode(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> version) 
+    { 
+        QRCode barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> QRCode(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setVersion(version); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createQRCode(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> version, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> ecl) 
+    { 
+        QRCode barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> QRCode(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setVersion(version); 
+        barcode.setEcl(ecl); 
+        barcode.setEcl(ecl); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createQRCode(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> version, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> ecl, 
+                             </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> moduleSize, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> margin) 
+    { 
+        QRCode barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> QRCode(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setVersion(version); 
+        barcode.setEcl(ecl); 
+        barcode.setModuleSize(moduleSize); 
+        barcode.setLeftMargin(margin); 
+        barcode.setRightMargin(margin); 
+        barcode.setTopMargin(margin); 
+        barcode.setBottomMargin(margin); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createQRCode(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> version, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> ecl, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>boolean</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> supportStructuredAppend, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> appendCount, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> appendIndex) 
+    { 
+        QRCode barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> QRCode(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setVersion(version); 
+        barcode.setEcl(ecl); 
+        barcode.setStructuredAppend(supportStructuredAppend); 
+        barcode.setSymbolCount(appendCount); 
+        barcode.setSymbolIndex(appendIndex); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createQRCode(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> version, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> ecl, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> fnc1Mode, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>byte</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> applicationIndicator) 
+    { 
+        QRCode barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> QRCode(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setVersion(version); 
+        barcode.setEcl(ecl); 
+        barcode.setFnc1Mode(fnc1Mode); 
+        barcode.setApplicationIndicator(applicationIndicator); 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> IJasperRenderer createQRCode(String data, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> dataMode, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> version, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> ecl, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>boolean</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> supportStructuredAppend, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> appendCount, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> appendIndex, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> fnc1Mode, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>byte</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> applicationIndicator, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>int</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> eci, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>boolean</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> processTilde, 
+              </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> moduleSize, </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>float</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> margin) 
+    { 
+        QRCode barcode = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> QRCode(); 
+        barcode.setData(data); 
+        barcode.setDataMode(dataMode); 
+        barcode.setVersion(version); 
+        barcode.setEcl(ecl); 
+        barcode.setStructuredAppend(supportStructuredAppend); 
+        barcode.setSymbolCount(appendCount); 
+        barcode.setSymbolIndex(appendIndex); 
+        barcode.setFnc1Mode(fnc1Mode); 
+        barcode.setApplicationIndicator(applicationIndicator); 
+        barcode.setEci(eci); 
+        barcode.setProcessTilde(processTilde); 
+        barcode.setModuleSize(moduleSize); 
+        barcode.setLeftMargin(margin); 
+        barcode.setRightMargin(margin); 
+        barcode.setTopMargin(margin); 
+        barcode.setBottomMargin(margin); 
+ 
+        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>return</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> barcode; 
+    } 
+ 
+ 
+ 
+} 
+</FONT></PRE>
+</BODY>
+</HTML>
