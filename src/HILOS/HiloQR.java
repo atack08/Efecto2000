@@ -42,7 +42,7 @@ public class HiloQR extends Thread {
 
     public HiloQR(JLabel lb, JTextField id, ListenerBotonesCaja lbt) {
         try {
-            socketServidor = new ServerSocket(5555);
+            socketServidor = new ServerSocket(4444);
             escuchar = true;
             
             this.labelQR = lb;
